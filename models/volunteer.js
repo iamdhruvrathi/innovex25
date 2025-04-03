@@ -1,22 +1,21 @@
+const { db } = require("../config/firebase.js");
 class Volunteer {
     constructor(name, email, phNo, startDate, workType, valid) {
-        this.name = name;        // Volunteer Name
-        this.email = email;      // Email
-        this.phNo = phNo;        // Phone Number
-        this.startDate = startDate; // Start Date of Volunteering
-        this.workType = workType; // Type of Work (e.g., Delivery, Cooking)
-        this.valid = valid;      // Whether the Volunteer is Active (true/false)
+        this.name = name;
+        this.email = email;
+        this.phNo = phNo;
+        this.startDate = startDate;
+        this.workType = workType;
+        this.valid = valid;
     }
 
-    getInfo() {
-        return {
-            name: this.name,
-            email: this.email,
-            phNo: this.phNo,
-            startDate: this.startDate,
-            workType: this.workType,
-            valid: this.valid,
-        };
+    static async create(volunteer) {
+        const ref = await db.collection("volunteers").add(volunteer.toJSON());
+        return ref.id;
+    }
+
+    toJSON() {
+        return { ...this };
     }
 }
 
