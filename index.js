@@ -184,12 +184,24 @@ app.post("/seeker", async (req, res) => {
     );
 
     await Seeker.create(seeker);
-    res.redirect("/");
+
+    // 🛠 Redirect after successful registration
+    if (req.headers["content-type"] === "application/json") {
+      res
+        .status(200)
+        .json({
+          message: "Seeker registered successfully",
+          redirect: "/thanks",
+        });
+    } else {
+      res.redirect("/thanks");
+    }
   } catch (error) {
     console.error("Error adding seeker:", error);
     res.status(500).json({ error: "Failed to register seeker" });
   }
 });
+
 
 app.get("/admin", async (req, res) => {
   try {
