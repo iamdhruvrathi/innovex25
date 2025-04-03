@@ -4,6 +4,7 @@ class Donation {
     constructor(name, email, address, type, amount) {
         this.name = name;
         this.email = email;
+        this.mob = mob;
         this.address = address;
         this.type = type;
         this.amount = amount;

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Donation</title>
+    <link rel="stylesheet" href="/css/kitchenDonation.css">
+</head>
+<body>
+    <header>
+        <h1>Donate Food from Kitchen</h1>
+    </header>
+
+    <main>
+        <form id="kitchenDonationForm">
+            <div>
+                <label for="kitchenId">Kitchen ID:</label>
+                <input type="text" id="kitchenId" name="kitchenId" required>
+            </div>
+
+            <div>
+                <label for="seekerId">Seeker ID:</label>
+                <input type="text" id="seekerId" name="seekerId" required>
+            </div>
+
+            <div>
+                <label for="foodAmount">Food Amount (kg):</label>
+                <input type="number" id="foodAmount" name="foodAmount" required>
+            </div>
+
+            <div>
+                <label for="foodType">Food Type:</label>
+                <input type="text" id="foodType" name="foodType" required>
+            </div>
+
+            <div>
+                <label for="expiryInfo">Expiry Information:</label>
+                <input type="text" id="expiryInfo" name="expiryInfo">
+            </div>
+
+            <button type="submit">Donate</button>
+        </form>
+    </main>
+
+    <script>
+        document.getElementById("kitchenDonationForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = {
+                kitchenId: document.getElementById("kitchenId").value,
+                seekerId: document.getElementById("seekerId").value,
+                foodAmount: document.getElementById("foodAmount").value,
+                foodType: document.getElementById("foodType").value,
+                expiryInfo: document.getElementById("expiryInfo").value
+            };
+
+            console.log("Kitchen Donation Details:", formData);
+        });
+    </script>
+</body>
+</html>
