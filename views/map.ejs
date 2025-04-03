@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Nearby Kitchens - KhaanaConnect</title>
+    <link rel="stylesheet" href="css/map.css">
+    <link href="https://unpkg.com/lucide-icons/dist/umd/lucide.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="brand">
+                <i class="lucide-utensils"></i>
+                <span>KhaanaConnect</span>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/donate" class="nav-link">Donate</a>
+                <a href="/kitchen" class="nav-link">Kitchen</a>
+                <a href="/contact" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Map Section -->
+    <section class="map-section">
+        <div class="container">
+            <div class="map-header">
+                <h1>Find Nearby Kitchens</h1>
+                <p>Locate registered community kitchens in your area</p>
+            </div>
+            <div class="map-container">
+                <div id="map"></div>
+                <div class="map-sidebar">
+                    <div class="search-box">
+                        <input type="text" id="location-search" placeholder="Enter your location">
+                        <button id="search-btn">
+                            <i class="lucide-search"></i>
+                        </button>
+                    </div>
+                    <div class="kitchen-list">
+                        <h3>Registered Kitchens</h3>
+                        <div id="kitchen-list-container">
+                            <!-- Kitchen list items will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Get in Touch</h3>
+                    <div class="contact-info">
+                        <a href="mailto:contact@khaanaconnect.org">
+                            <i class="lucide-mail"></i>
+                            contact@khaanaconnect.org
+                        </a>
+                        <a href="#">
+                            <i class="lucide-map-pin"></i>
+                            123, Food Street, Koramangala, Bangalore - 560034
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 KhaanaConnect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Google Maps Script -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
+    <script>
+        // Sample kitchen data - Replace with your actual data
+        const kitchens = [
+            {
+                name: "Community Kitchen 1",
+                address: "123, Food Street, Koramangala, Bangalore",
+                capacity: "100 meals/day",
+                contact: "+91 9876543210"
+            },
+            {
+                name: "Community Kitchen 2",
+                address: "456, Food Lane, Indiranagar, Bangalore",
+                capacity: "150 meals/day",
+                contact: "+91 9876543211"
+            }
+            // Add more kitchens as needed
+        ];
+
+        let map;
+        let markers = [];
+        let geocoder;
+
+        function initMap() {
+            // Initialize the map centered on Bangalore
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 12.9716, lng: 77.5946 },
+                zoom: 12
+            });
+
+            geocoder = new google.maps.Geocoder();
+
+            // Add markers for each kitchen
+            kitchens.forEach(kitchen => {
+                geocoder.geocode({ address: kitchen.address }, (results, status) => {
+                    if (status === 'OK') {
+                        const marker = new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location,
+                            title: kitchen.name,
+                            icon: {
+                                url: 'path/to/kitchen-marker.png', // Add your custom marker icon
+                                scaledSize: new google.maps.Size(32, 32)
+                            }
+                        });
+
+                        // Add info window
+                        const infoWindow = new google.maps.InfoWindow({
+                            content: `
+                                <div class="info-window">
+                                    <h3>${kitchen.name}</h3>
+                                    <p>${kitchen.address}</p>
+                                    <p>Capacity: ${kitchen.capacity}</p>
+                                    <p>Contact: ${kitchen.contact}</p>
+                                </div>
+                            `
+                        });
+
+                        marker.addListener('click', () => {
+                            infoWindow.open(map, marker);
+                        });
+
+                        markers.push(marker);
+                        addKitchenToList(kitchen, marker);
+                    }
+                });
+            });
+        }
+
+        function addKitchenToList(kitchen, marker) {
+            const container = document.getElementById('kitchen-list-container');
+            const item = document.createElement('div');
+            item.className = 'kitchen-item';
+            item.innerHTML = `
+                <h4>${kitchen.name}</h4>
+                <p>${kitchen.address}</p>
+                <p>Capacity: ${kitchen.capacity}</p>
+                <p>Contact: ${kitchen.contact}</p>
+            `;
+
+            item.addEventListener('click', () => {
+                map.setCenter(marker.getPosition());
+                map.setZoom(15);
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(() => marker.setAnimation(null), 2100);
+            });
+
+            container.appendChild(item);
+        }
+
+        // Search functionality
+        document.getElementById('search-btn').addEventListener('click', () => {
+            const location = document.getElementById('location-search').value;
+            if (location) {
+                geocoder.geocode({ address: location }, (results, status) => {
+                    if (status === 'OK') {
+                        map.setCenter(results[0].geometry.location);
+                        map.setZoom(13);
+                    }
+                });
+            }
+        });
+
+        // Initialize map when the page loads
+        window.onload = initMap;
+    </script>
+</body>
+</html>
