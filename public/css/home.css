@@ -48,7 +48,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
   color: var(--primary-color);
 }
@@ -63,6 +63,7 @@ body {
   color: var(--text-color);
   font-weight: 500;
   transition: var(--transition);
+  font-size: 1.1rem;
 }
 
 .nav-links a:hover {
@@ -91,11 +92,62 @@ body {
 .hero h1 {
   font-size: 3.5rem;
   margin-bottom: 1.5rem;
+  font-weight: 700;
 }
 
 .hero p {
   font-size: 1.2rem;
   margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+/* Join Options Section */
+.join-options {
+  padding: 5rem 0;
+  background: var(--light-gray);
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.option-card {
+  background: var(--white);
+  padding: 2.5rem;
+  border-radius: 15px;
+  text-align: center;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+}
+
+.option-card:hover {
+  transform: translateY(-10px);
+}
+
+.option-card i {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.option-card.donor i {
+  color: var(--primary-color);
+}
+
+.option-card.seeker i {
+  color: var(--secondary-color);
+}
+
+.option-card h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.option-card p {
+  margin-bottom: 2rem;
+  color: #666;
 }
 
 /* Buttons */
@@ -107,6 +159,7 @@ body {
   cursor: pointer;
   transition: var(--transition);
   margin: 0 10px;
+  font-size: 1rem;
 }
 
 .btn-primary {
@@ -119,57 +172,22 @@ body {
   color: var(--white);
 }
 
-.btn-outline {
-  background: transparent;
-  border: 2px solid var(--white);
-  color: var(--white);
-}
-
 .btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow);
 }
 
-/* Features Section */
-.features {
-  padding: 5rem 0;
-  background: var(--light-gray);
-}
-
-.features h2 {
-  text-align: center;
-  margin-bottom: 3rem;
-  font-size: 2.5rem;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-}
-
-.feature-card {
-  background: var(--white);
-  padding: 2rem;
-  border-radius: 10px;
-  text-align: center;
-  transition: var(--transition);
-  box-shadow: var(--shadow);
-}
-
-.feature-card:hover {
-  transform: translateY(-5px);
-}
-
-.feature-card i {
-  font-size: 2.5rem;
-  color: var(--primary-color);
-  margin-bottom: 1rem;
-}
-
 /* Statistics Section */
 .statistics {
   padding: 5rem 0;
+  background: var(--white);
+}
+
+.statistics h2 {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+  color: var(--text-color);
 }
 
 .stats-grid {
@@ -181,6 +199,13 @@ body {
 
 .stat-card {
   padding: 2rem;
+  background: var(--light-gray);
+  border-radius: 10px;
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
 }
 
 .stat-number {
@@ -190,77 +215,25 @@ body {
   margin: 1rem 0;
 }
 
-/* How It Works Section */
-.how-it-works {
-  padding: 5rem 0;
-  background: var(--light-gray);
-}
-
-.steps-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
-}
-
-.step {
-  text-align: center;
-  padding: 2rem;
-}
-
-.step-number {
-  width: 50px;
-  height: 50px;
-  background: var(--primary-color);
-  color: var(--white);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1rem;
-  font-weight: bold;
-}
-
-/* Download App Section */
-.download-app {
-  padding: 5rem 0;
-}
-
-.platform-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
-}
-
-.mobile-app, .sms-service {
-  text-align: center;
-  padding: 2rem;
-  background: var(--light-gray);
-  border-radius: 10px;
-}
-
-.app-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 1.5rem;
-}
-
-.btn-store {
-  background: var(--text-color);
-  color: var(--white);
-}
-
 /* Contact Section */
 .contact {
   padding: 5rem 0;
   background: var(--light-gray);
 }
 
+.contact h2 {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+}
+
 .contact-form {
   max-width: 600px;
   margin: 0 auto;
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: var(--shadow);
 }
 
 .form-group {
@@ -281,18 +254,75 @@ body {
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
+  transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.1);
 }
 
 .btn-full {
   width: 100%;
 }
 
+/* Notice Panel */
+.notice-panel {
+  background: var(--primary-color);
+  color: var(--white);
+  padding: 1rem 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.notice-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.notice-content i {
+  font-size: 1.5rem;
+}
+
 /* Footer */
 .footer {
   background: var(--text-color);
   color: var(--white);
-  padding: 2rem 0;
+  padding: 3rem 0;
+  margin-bottom: 60px;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.footer-stats {
   text-align: center;
+}
+
+.footer-stats h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.total-saved {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.copyright {
+  opacity: 0.8;
 }
 
 /* Responsive Design */
@@ -313,5 +343,15 @@ body {
   
   .btn {
     margin: 0;
+  }
+
+  .notice-content {
+    flex-direction: column;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .footer {
+    margin-bottom: 80px;
   }
 }
