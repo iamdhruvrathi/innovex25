@@ -20,11 +20,11 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
   res.render("home_page");
-}); 
+});
 
 app.get("/donate", (req, res) => {
   res.render("donate_page");
-  
+
 });
 
 app.post("/donate", async (req, res) => {
@@ -34,7 +34,7 @@ app.post("/donate", async (req, res) => {
       email: req.body.email,
       phone: req.body.phone,
       address: req.body.address,
-      foodType: req.body["food-type"], 
+      foodType: req.body["food-type"],
       quantity: req.body.quantity,
       pickupDate: req.body["pickup-date"] || "",
       pickupTime: req.body["pickup-time"] || "",
@@ -56,7 +56,7 @@ app.post("/donate", async (req, res) => {
     );
 
     await Donation.create(donation);
-     res.redirect("/thanks");
+    res.redirect("/thanks");
 
   } catch (error) {
     console.error("Error adding donation:", error);
@@ -71,15 +71,22 @@ app.get("/kitchen", (req, res) => {
 
 app.post("/kitchen", async (req, res) => {
   try {
-    const kitchen = new Kitchen(
-      req.body.name,
-      req.body.address,
-      req.body.dailyProd,
-      req.body.avgWaste,
-      req.body.certs,
-      req.body.delivery,
-      req.body.donations
-    );
+    const kitchenData = {
+      name: req.body.name || "",
+      address: req.body.address || "",
+      dailyProd: req.body.dailyProd || "",
+      avgWaste: req.body.avgWaste || "",
+      certs: req.body.certs || "",
+      delivery_type: req.body.delivery_type || "",
+      donations: req.body.donations || "",
+    };
+    console.log(kitchenData);
+
+    if (!kitchenData.name || !kitchenData.address || !kitchenData.dailyProd) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    await db.collection("kitchens").add(kitchenData);
     res.redirect("/thanks");
     
     await Kitchen.create(kitchen);
@@ -99,40 +106,52 @@ app.get("/thanks", (req, res) => {
 
 app.post("/volunteer", async (req, res) => {
   try {
-    const volunteer = new Volunteer(
-      req.body.name,
-      req.body.email,
-      req.body.phNo,
-      req.body.startDate,
-      req.body.workType,
-      req.body.valid
-    );
-    await Volunteer.create(volunteer);
-     res.redirect("/");
+    const volunteerData = {
+      name: req.body.name || "",
+      email: req.body.email || "",
+      phone: req.body.phNo || "",
+      startDate: req.body.startDate || "",
+      workType: req.body.workType || "",
+    };
+
+    console.log(volunteerData);
+
+    if (!volunteerData.name || !volunteerData.email || !volunteerData.phone) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    await db.collection("volunteers").add(volunteerData);
+    res.redirect("/");
   } catch (error) {
     console.error("Error adding volunteer:", error);
     res.status(500).json({ error: "Failed to register volunteer" });
   }
 });
 
-
-
-app.get("/seeker", (req, res) => {
-  res.render("seeker_page.ejs");
-});
-
 app.post("/seeker", async (req, res) => {
   try {
+    const seekerData = {
+      type: req.body.type,
+      name: req.body.name,
+      address: req.body.address,
+      dailyNeed: req.body.dailyNeed,
+      contact: req.body.contact,
+      freq: req.body.freq,
+    };
+
+    console.log(seekerData);
+
     const seeker = new Seeker(
-      req.body.type,
-      req.body.name,
-      req.body.address,
-      req.body.dailyNeed,
-      req.body.contact,
-      req.body.freq
+      seekerData.type,
+      seekerData.name,
+      seekerData.address,
+      seekerData.dailyNeed,
+      seekerData.contact,
+      seekerData.freq
     );
+
     await Seeker.create(seeker);
-     res.redirect("/");
+    res.redirect("/");
   } catch (error) {
     console.error("Error adding seeker:", error);
     res.status(500).json({ error: "Failed to register seeker" });
