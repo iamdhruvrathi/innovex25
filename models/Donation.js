@@ -1,13 +1,16 @@
 const { db } = require("../config/firebase.js");
 
 class Donation {
-    constructor(name, email, address, type, amount) {
+    constructor(name, email, phone, address, foodType, quantity, pickupDate = "", pickupTime = "", notes = "") {
         this.name = name;
         this.email = email;
-        this.mob = mob;
+        this.phone = phone;
         this.address = address;
-        this.type = type;
-        this.amount = amount;
+        this.foodType = foodType;
+        this.quantity = quantity;
+        this.pickupDate = pickupDate;
+        this.pickupTime = pickupTime;
+        this.notes = notes;
         this.dateTime = new Date().toISOString();
     }
 
