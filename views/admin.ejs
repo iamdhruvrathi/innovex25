@@ -5,132 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link rel="stylesheet" href="/css/admin.css">
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 </head>
 <body>
     <div class="admin-container">
         <h1>Admin Dashboard</h1>
-        
-        <h2>Food Donations</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Donor</th>
-                    <th>Quantity</th>
-                    <th>Status</th>
-                    <th>Transfer</th>
-                </tr>
-            </thead>
-            <tbody id="food-donations"></tbody>
-        </table>
 
-        <h2>Money Donations</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Donor</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Transfer</th>
-                </tr>
-            </thead>
-            <tbody id="money-donations"></tbody>
-        </table>
+        <!-- Total Donations -->
+        <section class="donation-summary">
+            <h2>Total Donations</h2>
+            <p><strong>Money Donated:</strong> ₹ <%= totalMoneyDonated %></p>
+            <p><strong>Total Food Donated:</strong> <%= totalFoodQuantity %> Units</p>
+        </section>
 
-        <h2>Seekers</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Food Needed</th>
-                    <th>Money Needed</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody id="seekers-list"></tbody>
-        </table>
+        <!-- Kitchens -->
+        <section class="kitchen-section">
+            <h2>Kitchens</h2>
+            <div class="kitchens">
+                <% kitchens.forEach(kitchen => { %>
+                    <div class="kitchen-card">
+                        <h3><%= kitchen.name %></h3>
+                        <p><strong>Address:</strong> <%= kitchen.address %></p>
+                        <p><strong>Daily Production:</strong> <%= kitchen.dailyProd %></p>
+                        <p><strong>Avg Waste:</strong> <%= kitchen.avgWaste %></p>
+                    </div>
+                <% }); %>
+            </div>
+        </section>
+
+        <!-- Seekers -->
+        <section class="seeker-section">
+            <h2>Seekers</h2>
+            <div class="seekers">
+                <% seekers.forEach(seeker => { %>
+                    <div class="seeker-card">
+                        <h3><%= seeker.name %></h3>
+                        <p><strong>Type:</strong> <%= seeker.type %></p>
+                        <p><strong>Daily Need:</strong> <%= seeker.dailyNeed %></p>
+                        <p><strong>Contact:</strong> <%= seeker.contact %></p>
+                    </div>
+                <% }); %>
+            </div>
+        </section>
+
+        <!-- Kitchen to Seeker Mapping -->
+        <section class="mapping">
+            <h2>Food Distribution</h2>
+            <div class="map-container">
+                <% randomMappings.forEach(mapping => { %>
+                    <div class="map-item">
+                        <div class="kitchen-box"><%= mapping.kitchen.name %></div>
+                        <div class="arrow">→</div>
+                        <div class="seeker-box"><%= mapping.seeker.name %></div>
+                    </div>
+                <% }); %>
+            </div>
+        </section>
     </div>
-
-    <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // Fetch Donations and Seekers
-        async function fetchData() {
-            const foodTable = document.getElementById("food-donations");
-            const moneyTable = document.getElementById("money-donations");
-            const seekerTable = document.getElementById("seekers-list");
-
-            foodTable.innerHTML = "";
-            moneyTable.innerHTML = "";
-            seekerTable.innerHTML = "";
-
-            // Fetch Food Donations
-            const foodDocs = await db.collection("donations").where("type", "==", "food").get();
-            foodDocs.forEach(doc => {
-                let data = doc.data();
-                foodTable.innerHTML += `
-                    <tr>
-                        <td>${data.donor}</td>
-                        <td>${data.quantity}</td>
-                        <td>${data.status}</td>
-                        <td><button onclick="transferDonation('${doc.id}', 'food')">Transfer</button></td>
-                    </tr>
-                `;
-            });
-
-            // Fetch Money Donations
-            const moneyDocs = await db.collection("donations").where("type", "==", "money").get();
-            moneyDocs.forEach(doc => {
-                let data = doc.data();
-                moneyTable.innerHTML += `
-                    <tr>
-                        <td>${data.donor}</td>
-                        <td>₹${data.amount}</td>
-                        <td>${data.status}</td>
-                        <td><button onclick="transferDonation('${doc.id}', 'money')">Transfer</button></td>
-                    </tr>
-                `;
-            });
-
-            // Fetch Seekers
-            const seekerDocs = await db.collection("seekers").get();
-            seekerDocs.forEach(doc => {
-                let data = doc.data();
-                seekerTable.innerHTML += `
-                    <tr>
-                        <td>${data.name}</td>
-                        <td>${data.foodNeeded}</td>
-                        <td>₹${data.moneyNeeded}</td>
-                        <td>${data.status}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        // Transfer Donation
-        async function transferDonation(donationId, type) {
-            await db.collection("donations").doc(donationId).update({
-                status: "transferred"
-            });
-            alert("Donation Transferred!");
-            fetchData(); // Refresh the table
-        }
-
-        // Load Data on Page Load
-        fetchData();
-    </script>
 </body>
 </html>
