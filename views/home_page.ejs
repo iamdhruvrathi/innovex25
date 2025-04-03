@@ -17,9 +17,6 @@
           <i class="lucide-utensils"></i>
           <span>KhaanaConnect</span>
         </div>
-        <div class="nav-links">
-          <a href="#contact">Contact</a>
-        </div>
       </div>
     </nav>
 
@@ -89,39 +86,45 @@
       </div>
     </section>
 
-    <section id="contact" class="contact">
+    <section class="food-availability">
       <div class="container">
-        <h2>Get Involved</h2>
-        <form class="contact-form">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" required />
+        <h2>Real-time Food Availability</h2>
+        <div class="availability-grid">
+          <div class="availability-card">
+            <div class="availability-header">
+              <i class="lucide-utensils"></i>
+              <span class="status available">Available</span>
+            </div>
+            <h3>Fresh Vegetables</h3>
+            <p>Location: Koramangala</p>
+            <p>Quantity: 5 kgs</p>
+            <p>Expires: Today</p>
           </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" required />
+          <div class="availability-card">
+            <div class="availability-header">
+              <i class="lucide-utensils"></i>
+              <span class="status available">Available</span>
+            </div>
+            <h3>Cooked Meals</h3>
+            <p>Location: Indiranagar</p>
+            <p>Quantity: 20 plates</p>
+            <p>Expires: Today</p>
           </div>
-          <div class="form-group">
-            <label for="role">I want to join as</label>
-            <select id="role" required>
-              <option>Food Donor</option>
-              <option>Community Kitchen</option>
-              <option>Volunteer</option>
-              <option>Food Seeker</option>
-            </select>
+          <div class="availability-card">
+            <div class="availability-header">
+              <i class="lucide-utensils"></i>
+              <span class="status available">Available</span>
+            </div>
+            <h3>Bread & Bakery</h3>
+            <p>Location: HSR Layout</p>
+            <p>Quantity: 3 kgs</p>
+            <p>Expires: Tomorrow</p>
           </div>
-          <div class="form-group">
-            <label for="message">Message</label>
-            <textarea id="message" rows="4" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary btn-full">
-            Send Message
-          </button>
-        </form>
+        </div>
       </div>
     </section>
 
-    <div class="notice-panel">
+    <section class="notice-panel">
       <div class="container">
         <div class="notice-content">
           <i class="lucide-alert-circle"></i>
@@ -131,7 +134,7 @@
           </p>
         </div>
       </div>
-    </div>
+    </section>
 
     <footer class="footer">
       <div class="container">
@@ -139,6 +142,13 @@
           <div class="footer-stats">
             <h3>Total Food Saved</h3>
             <p class="total-saved">15,000+ Kgs</p>
+          </div>
+          <div class="footer-contact">
+            <h3>Contact Us</h3>
+            <div class="contact-info">
+              <p><i class="lucide-mail"></i> contact@khaanaconnect.org</p>
+              <p><i class="lucide-map-pin"></i> 123, Food Street, Koramangala, Bangalore - 560034</p>
+            </div>
           </div>
           <p class="copyright">© 2024 KhaanaConnect. All rights reserved.</p>
         </div>
