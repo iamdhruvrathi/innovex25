@@ -56,7 +56,7 @@ app.post("/donate", async (req, res) => {
     );
 
     await Donation.create(donation);
-    res.redirect("/");
+    res.redirect("/thanks");
 
   } catch (error) {
     console.error("Error adding donation:", error);
@@ -87,7 +87,7 @@ app.post("/kitchen", async (req, res) => {
     }
 
     await db.collection("kitchens").add(kitchenData);
-    res.redirect("/");
+    res.redirect("/thanks");
   } catch (error) {
     console.error("Error adding kitchen:", error);
     res.status(500).json({ error: "Failed to register kitchen" });
@@ -97,6 +97,10 @@ app.post("/kitchen", async (req, res) => {
 app.get("/volunteer", (req, res) => {
   res.render("volunteer.ejs");
 });
+app.get("/thanks", (req, res) => {
+  res.render("thank_you.ejs");
+});
+
 
 app.post("/volunteer", async (req, res) => {
   try {
@@ -151,5 +155,11 @@ app.post("/seeker", async (req, res) => {
     res.status(500).json({ error: "Failed to register seeker" });
   }
 });
+
+
+app.get("/admin", (req, res) => {
+  res.render("admin.ejs");
+});
+
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
