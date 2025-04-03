@@ -56,11 +56,3 @@ app.post("/seeker", (req, res) => {
   res.json({ message: "seeker registered successfully!" });
 });
 
-app.get("/kitchen", (req, res) => {
-  res.render("kitchen_page_immediate_food.ejs");
-});
-
-app.post("/kitchen", (req, res) => {
-  console.log("Received Kitchen:", req.body);
-  res.json({ message: "Kitchen registered successfully!" });
-});
