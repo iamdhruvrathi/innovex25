@@ -56,7 +56,7 @@ app.post("/donate", async (req, res) => {
     );
 
     await Donation.create(donation);
-     res.redirect("/");
+     res.redirect("/thanks");
 
   } catch (error) {
     console.error("Error adding donation:", error);
