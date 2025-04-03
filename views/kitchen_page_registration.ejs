@@ -4,9 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register a Kitchen</title>
-    <link rel="stylesheet" href="/css/kitchen.css">
+    <link rel="stylesheet" href="css/kitchen.css" />
 </head>
 <body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="brand">
+                <i class="lucide-utensils"></i>
+                <span>KhaanaConnect</span>
+            </div>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/kitchen">Kitchen</a>
+                <a href="/contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
     <header>
         <h1>Register a Kitchen</h1>
     </header>
@@ -47,13 +63,37 @@
             </div>
 
             <div>
-                <label for="donations">Past Donations (kg):</label>
+                <label for="donations">Present Donations (kg):</label>
                 <input type="number" id="donations" name="donations" min="0">
             </div>
 
             <button type="submit">Register Kitchen</button>
         </form>
     </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Get in Touch</h3>
+                    <div class="contact-info">
+                        <a href="mailto:contact@khaanaconnect.org">
+                            <i class="lucide-mail"></i>
+                            contact@khaanaconnect.org
+                        </a>
+                        <a href="#">
+                            <i class="lucide-map-pin"></i>
+                            123, Food Street, Koramangala, Bangalore - 560034
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 KhaanaConnect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
         document.getElementById("kitchenForm").addEventListener("submit", async function (e) {
@@ -83,5 +123,6 @@
             alert(result.message);
         });
     </script>
+
 </body>
 </html>

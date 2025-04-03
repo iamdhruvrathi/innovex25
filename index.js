@@ -22,6 +22,7 @@ app.get("/", (req, res) => {
 
 app.get("/donate", (req, res) => {
   res.render("donate_page");
+  
 });
 
 app.post("/donate", (req, res) => {
