@@ -91,6 +91,9 @@ app.post("/kitchen", async (req, res) => {
 app.get("/volunteer", (req, res) => {
   res.render("volunteer.ejs");
 });
+app.get("/thanks", (req, res) => {
+  res.render("thank_you.ejs");
+});
 
 app.post("/volunteer", async (req, res) => {
   try {
