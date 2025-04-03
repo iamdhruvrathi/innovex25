@@ -8,6 +8,7 @@ class Seeker {
         this.dailyNeed = dailyNeed;
         this.contact = contact;
         this.freq = freq;
+        this.recieved = 0;
     }
 
     static async create(seeker) {

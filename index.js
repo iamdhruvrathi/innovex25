@@ -25,6 +25,42 @@ app.get("/donate", (req, res) => {
 });
 
 app.post("/donate", (req, res) => {
-  console.log("Received Donation:", req.body); // ✅ Now this will log proper JSON data
+  console.log("Received Donation:", req.body); 
   res.json({ message: "Donation received. Thank you!" });
+});
+
+app.get("/kitchen", (req, res) => {
+  res.render("kitchen_page_registration.ejs");
+});
+
+app.post("/kitchen", (req, res) => {
+  console.log("Received Kitchen:", req.body); 
+  res.json({ message: "Kitchen registered successfully!" });
+});
+
+app.get("/volunteer", (req, res) => {
+  res.render("volunteer.ejs");
+});
+
+app.post("/volunteer", (req, res) => {
+  console.log("Received volunteer:", req.body); 
+  res.json({ message: "volunteer registered successfully!" });
+});
+
+app.get("/seeker", (req, res) => {
+  res.render("seeker_page.ejs");
+});
+
+app.post("/seeker", (req, res) => {
+  console.log("Received seeker:", req.body);
+  res.json({ message: "seeker registered successfully!" });
+});
+
+app.get("/kitchen", (req, res) => {
+  res.render("kitchen_page_immediate_food.ejs");
+});
+
+app.post("/kitchen", (req, res) => {
+  console.log("Received Kitchen:", req.body);
+  res.json({ message: "Kitchen registered successfully!" });
 });

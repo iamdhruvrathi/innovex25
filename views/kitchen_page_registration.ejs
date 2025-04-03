@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register a Kitchen</title>
+    <link rel="stylesheet" href="/css/kitchen.css">
+</head>
+<body>
+    <header>
+        <h1>Register a Kitchen</h1>
+    </header>
+
+    <main>
+        <form id="kitchenForm">
+            <div>
+                <label for="name">Kitchen Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div>
+                <label for="address">Address:</label>
+                <textarea id="address" name="address" required></textarea>
+            </div>
+
+            <div>
+                <label for="dailyProd">Daily Production (kg):</label>
+                <input type="number" id="dailyProd" name="dailyProd" min="1" required>
+            </div>
+
+            <div>
+                <label for="avgWaste">Average Waste (kg):</label>
+                <input type="number" id="avgWaste" name="avgWaste" min="0" required>
+            </div>
+
+            <div>
+                <label for="certs">Certifications (comma separated):</label>
+                <input type="text" id="certs" name="certs">
+            </div>
+
+            <div>
+                <label for="delivery">Delivery Available?</label>
+                <select id="delivery" name="delivery" required>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="donations">Past Donations (kg):</label>
+                <input type="number" id="donations" name="donations" min="0">
+            </div>
+
+            <button type="submit">Register Kitchen</button>
+        </form>
+    </main>
+
+    <script>
+        document.getElementById("kitchenForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById("name").value,
+                address: document.getElementById("address").value,
+                dailyProd: document.getElementById("dailyProd").value,
+                avgWaste: document.getElementById("avgWaste").value,
+                certs: document.getElementById("certs").value.split(",").map(c => c.trim()),
+                delivery: document.getElementById("delivery").value,
+                donations: document.getElementById("donations").value || 0
+            };
+
+            console.log("Kitchen Details:", formData);
+
+            const response = await fetch("/kitchen", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        });
+    </script>
+</body>
+</html>

@@ -8,7 +8,7 @@ const { Volunteer } = require("./models/Volunteer");
 async function runTests() {
     try {
         // Test Kitchen
-        const kitchen = new Kitchen("Sunshine Kitchen", "123 Main St", 500, 50, ["ISO 22000"], "Doorstep", []);
+        const kitchen = new Kitchen("Sunshine Kitchen", "123 Main St", 500, 50, ["ISO 22000"], "Doorstep");
         const kitchenId = await Kitchen.create(kitchen);
         console.log("Kitchen Created with ID:", kitchenId);
 
@@ -18,7 +18,7 @@ async function runTests() {
         console.log("Seeker Created with ID:", seekerId);
 
         // Test Donation
-        const donation = new Donation("John Doe", "john@example.com", "789 Pine St", "Food", 100);
+        const donation = new Donation("John Doe", "john@example.com","1531513" ,"789 Pine St", "Food", 100);
         const donationId = await Donation.create(donation);
         console.log("Donation Created with ID:", donationId);
 
