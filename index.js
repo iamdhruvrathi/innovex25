@@ -24,7 +24,6 @@ app.get("/", (req, res) => {
 
 app.get("/donate", (req, res) => {
   res.render("donate_page");
-
 });
 
 app.post("/donate", async (req, res) => {
@@ -57,12 +56,12 @@ app.post("/donate", async (req, res) => {
 
     await Donation.create(donation);
     res.redirect("/thanks");
-
   } catch (error) {
     console.error("Error adding donation:", error);
     res.status(500).json({ error: "Failed to process donation" });
   }
 });
+
 
 
 app.get("/kitchen", (req, res) => {
@@ -76,25 +75,40 @@ app.post("/kitchen", async (req, res) => {
       address: req.body.address || "",
       dailyProd: req.body.dailyProd || "",
       avgWaste: req.body.avgWaste || "",
-      certs: req.body.certs || "",
-      delivery_type: req.body.delivery_type || "",
-      donations: req.body.donations || "",
+      certs: req.body.certs || [],
+      delivery_type: req.body.delivery || "",
+      donations: req.body.donations || "0",
     };
-    console.log(kitchenData);
 
-    if (!kitchenData.name || !kitchenData.address || !kitchenData.dailyProd) {
-      return res.status(400).json({ error: "Missing required fields" });
+    console.log("kitchenData:", kitchenData);
+
+    // Create kitchen object (if using class):
+    const kitchen = new Kitchen(
+      kitchenData.name,
+      kitchenData.address,
+      kitchenData.dailyProd,
+      kitchenData.avgWaste,
+      kitchenData.certs,
+      kitchenData.delivery_type,
+      kitchenData.donations
+    );
+
+    const id = await Kitchen.create(kitchen);
+
+    // 🧠 Check if it's AJAX (fetch)
+    if (req.headers["content-type"] === "application/json") {
+      res
+        .status(200)
+        .json({ message: "Kitchen registered successfully", kitchenId: id });
+    } else {
+      res.redirect("/thanks");
     }
-
-    await db.collection("kitchens").add(kitchenData);
-    res.redirect("/thanks");
-    
-    await Kitchen.create(kitchen);
   } catch (error) {
     console.error("Error adding kitchen:", error);
     res.status(500).json({ error: "Failed to register kitchen" });
   }
 });
+
 
 app.get("/volunteer", (req, res) => {
   res.render("volunteer.ejs");
@@ -102,7 +116,6 @@ app.get("/volunteer", (req, res) => {
 app.get("/thanks", (req, res) => {
   res.render("thank_you.ejs");
 });
-
 
 app.post("/volunteer", async (req, res) => {
   try {
@@ -126,6 +139,10 @@ app.post("/volunteer", async (req, res) => {
     console.error("Error adding volunteer:", error);
     res.status(500).json({ error: "Failed to register volunteer" });
   }
+});
+
+app.get("/seeker", (req, res) => {
+  res.render("seeker_page.ejs");
 });
 
 app.post("/seeker", async (req, res) => {
@@ -157,7 +174,6 @@ app.post("/seeker", async (req, res) => {
     res.status(500).json({ error: "Failed to register seeker" });
   }
 });
-
 
 app.get("/admin", async (req, res) => {
   try {
@@ -212,8 +228,6 @@ app.get("/admin", async (req, res) => {
   }
 });
 
-
-
-
-
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Server running on http://localhost:${PORT}`)
+);
