@@ -5,8 +5,8 @@ const ejsMate = require("ejs-mate");
 
 const app = express();
 
-app.listen(8080, () => {
-  console.log("http://localhost:8080");
+app.listen(8000, () => {
+  console.log("http://localhost:8000");
 });
 
 app.set("view engine", "ejs");
