@@ -1,21 +1,29 @@
-const { Resend } = require("resend"); // Ensure correct import
-require("dotenv").config(); // Load environment variables
+const nodemailer = require("nodemailer");
+require("dotenv").config();
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
-async function sendEmail() {
-    try {
-        const response = await resend.emails.send({
-            from: "onboarding@resend.dev", // Resend test sender (for unverified accounts)
-            to: "ankhadatharva15@gmail.com", // Change to the recipient's email
-            subject: "Hello World",
-            html: "<p>CHUBS MAHARAJ KI JAIII <strong>first email</strong>!</p>",
-        });
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "gsumanth3005@gmail.com",
+    pass: process.env.APP_PW, // Use the app password here
+  },
+  tls: {
+    rejectUnauthorized: false, 
+  },
+});
 
-        console.log("Email sent successfully:", response);
-    } catch (error) {
-        console.error("Error sending email:", error);
-    }
-}
+const mailOptions = {
+  from: "gsumanth3005@gmail.com",
+  to: "dhruv2005rathi@gmail.com",
+  subject: "Test Email",
+  text: "Hello! This is a test email sent using Nodemailer and Gmail SMTP.",
+};
 
-sendEmail();
+transporter.sendMail(mailOptions, (error, info) => {
+  if (error) {
+    console.error("Error sending email:", error);
+  } else {
+    console.log("Email sent successfully:", info.response);
+  }
+});
