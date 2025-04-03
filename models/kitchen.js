@@ -1,24 +1,23 @@
+const { db } = require("../config/firebase.js");
+
 class Kitchen {
     constructor(name, address, dailyProd, avgWaste, certs, delivery, donations) {
-        this.name = name;          // Kitchen Name
-        this.address = address;    // Address
-        this.dailyProd = dailyProd; // Per Day Production
-        this.avgWaste = avgWaste;  // Average Wastage
-        this.certs = certs;        // Certifications
-        this.delivery = delivery;  // Delivery Type
-        this.donations = donations; // Donations
+        this.name = name;
+        this.address = address;
+        this.dailyProd = dailyProd;
+        this.avgWaste = avgWaste;
+        this.certs = certs;
+        this.delivery = delivery;
+        this.donations = donations;
     }
 
-    getInfo() {
-        return {
-            name: this.name,
-            address: this.address,
-            dailyProd: this.dailyProd,
-            avgWaste: this.avgWaste,
-            certs: this.certs,
-            delivery: this.delivery,
-            donations: this.donations,
-        };
+    static async create(kitchen) {
+        const ref = await db.collection("kitchens").add(kitchen.toJSON());
+        return ref.id;
+    }
+
+    toJSON() {
+        return { ...this };
     }
 }
 
