@@ -9,7 +9,6 @@ app.listen(8080, () => {
   console.log("http://localhost:8080");
 });
 
-
 app.set("view engine", "ejs");
 app.engine("ejs", ejsMate);
 app.set("views", path.join(__dirname, "views"));
