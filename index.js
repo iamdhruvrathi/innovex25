@@ -56,7 +56,7 @@ app.post("/donate", async (req, res) => {
     );
 
     await Donation.create(donation);
-    res.json({ message: "Donation received. Thank you!" });
+     res.redirect("/");
 
   } catch (error) {
     console.error("Error adding donation:", error);
@@ -81,7 +81,7 @@ app.post("/kitchen", async (req, res) => {
       req.body.donations
     );
     await Kitchen.create(kitchen);
-    res.json({ message: "Kitchen registered successfully!" });
+     res.redirect("/");
   } catch (error) {
     console.error("Error adding kitchen:", error);
     res.status(500).json({ error: "Failed to register kitchen" });
@@ -103,7 +103,7 @@ app.post("/volunteer", async (req, res) => {
       req.body.valid
     );
     await Volunteer.create(volunteer);
-    res.json({ message: "Volunteer registered successfully!" });
+     res.redirect("/");
   } catch (error) {
     console.error("Error adding volunteer:", error);
     res.status(500).json({ error: "Failed to register volunteer" });
@@ -125,7 +125,7 @@ app.post("/seeker", async (req, res) => {
       req.body.freq
     );
     await Seeker.create(seeker);
-    res.json({ message: "Seeker registered successfully!" });
+     res.redirect("/");
   } catch (error) {
     console.error("Error adding seeker:", error);
     res.status(500).json({ error: "Failed to register seeker" });

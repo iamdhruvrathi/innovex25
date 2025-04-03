@@ -95,22 +95,21 @@
         </div>
     </footer>
 
-    <script>
-        document.getElementById("kitchenForm").addEventListener("submit", async function (e) {
-            e.preventDefault();
+   <script>
+    document.getElementById("kitchenForm").addEventListener("submit", async function (e) {
+        e.preventDefault(); // Prevent default form submission
 
-            const formData = {
-                name: document.getElementById("name").value,
-                address: document.getElementById("address").value,
-                dailyProd: document.getElementById("dailyProd").value,
-                avgWaste: document.getElementById("avgWaste").value,
-                certs: document.getElementById("certs").value.split(",").map(c => c.trim()),
-                delivery: document.getElementById("delivery").value,
-                donations: document.getElementById("donations").value || 0
-            };
+        const formData = {
+            name: document.getElementById("name").value,
+            address: document.getElementById("address").value,
+            dailyProd: document.getElementById("dailyProd").value,
+            avgWaste: document.getElementById("avgWaste").value,
+            certs: document.getElementById("certs").value.split(",").map(c => c.trim()),
+            delivery: document.getElementById("delivery").value,
+            donations: document.getElementById("donations").value || 0
+        };
 
-            console.log("Kitchen Details:", formData);
-
+        try {
             const response = await fetch("/kitchen", {
                 method: "POST",
                 headers: {
@@ -119,10 +118,19 @@
                 body: JSON.stringify(formData)
             });
 
-            const result = await response.json();
-            alert(result.message);
-        });
-    </script>
+            if (response.ok) {
+                window.location.href = "/"; // Redirect to home after successful submission
+            } else {
+                const result = await response.json();
+                alert(result.message || "Something went wrong!");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Failed to register the kitchen.");
+        }
+    });
+</script>
+
 
 </body>
 </html>
