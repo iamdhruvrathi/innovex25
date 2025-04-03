@@ -99,7 +99,7 @@ body {
   line-height: 1.2;
   margin-bottom: 1.5rem;
   background: linear-gradient(135deg, var(--earth-green) 0%, var(--midnight-blue) 100%);
-  -webkit-background-clip: text;
+  
   -webkit-text-fill-color: transparent;
 }
 
