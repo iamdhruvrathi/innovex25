@@ -159,9 +159,61 @@ app.post("/seeker", async (req, res) => {
 });
 
 
-app.get("/admin", (req, res) => {
-  res.render("admin.ejs");
+app.get("/admin", async (req, res) => {
+  try {
+    const kitchensSnapshot = await db.collection("kitchens").get();
+    const seekersSnapshot = await db.collection("seekers").get();
+    const donationsSnapshot = await db.collection("donations").get();
+
+    const kitchens = kitchensSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const seekers = seekersSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const donations = donationsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    // Calculate Total Money Donated & Food Donated
+    let totalMoneyDonated = 0;
+    let totalFoodQuantity = 0;
+
+    donations.forEach((donation) => {
+      if (donation.amount) totalMoneyDonated += donation.amount;
+      if (donation.quantity)
+        totalFoodQuantity += parseInt(donation.quantity) || 0;
+    });
+
+    // Randomly Assign Kitchens to Seekers
+    let randomMappings = [];
+    const shuffledSeekers = [...seekers].sort(() => 0.5 - Math.random());
+
+    kitchens.forEach((kitchen, index) => {
+      if (shuffledSeekers[index]) {
+        randomMappings.push({ kitchen, seeker: shuffledSeekers[index] });
+      }
+    });
+
+    res.render("admin", {
+      kitchens,
+      seekers,
+      donations,
+      totalMoneyDonated,
+      totalFoodQuantity,
+      randomMappings,
+    });
+  } catch (error) {
+    console.error("Error fetching admin data:", error);
+    res.status(500).send("Error fetching data");
+  }
 });
+
+
+
 
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
