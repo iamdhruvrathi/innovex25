@@ -81,6 +81,7 @@ app.post("/kitchen", async (req, res) => {
       req.body.donations
     );
     res.redirect("/thanks");
+    
     await Kitchen.create(kitchen);
   } catch (error) {
     console.error("Error adding kitchen:", error);

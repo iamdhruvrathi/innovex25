@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link rel="stylesheet" href="/css/admin.css">
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 </head>
 <body>
     <div class="admin-container">
         <h1>Admin Dashboard</h1>
-        
+
         <h2>Food Donations</h2>
         <table>
             <thead>
@@ -53,22 +51,10 @@
     </div>
 
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // Fetch Donations and Seekers
         async function fetchData() {
+            const response = await fetch("/admin/data");
+            const { donations, seekers } = await response.json();
+
             const foodTable = document.getElementById("food-donations");
             const moneyTable = document.getElementById("money-donations");
             const seekerTable = document.getElementById("seekers-list");
@@ -77,59 +63,56 @@
             moneyTable.innerHTML = "";
             seekerTable.innerHTML = "";
 
-            // Fetch Food Donations
-            const foodDocs = await db.collection("donations").where("type", "==", "food").get();
-            foodDocs.forEach(doc => {
-                let data = doc.data();
+            // Populate Food Donations
+            donations.filter(d => d.foodType).forEach(donation => {
                 foodTable.innerHTML += `
                     <tr>
-                        <td>${data.donor}</td>
-                        <td>${data.quantity}</td>
-                        <td>${data.status}</td>
-                        <td><button onclick="transferDonation('${doc.id}', 'food')">Transfer</button></td>
+                        <td>${donation.name}</td>
+                        <td>${donation.quantity}</td>
+                        <td>${donation.status}</td>
+                        <td><button onclick="transferDonation('${donation.id}')">Transfer</button></td>
                     </tr>
                 `;
             });
 
-            // Fetch Money Donations
-            const moneyDocs = await db.collection("donations").where("type", "==", "money").get();
-            moneyDocs.forEach(doc => {
-                let data = doc.data();
+            // Populate Money Donations
+            donations.filter(d => d.amount).forEach(donation => {
                 moneyTable.innerHTML += `
                     <tr>
-                        <td>${data.donor}</td>
-                        <td>₹${data.amount}</td>
-                        <td>${data.status}</td>
-                        <td><button onclick="transferDonation('${doc.id}', 'money')">Transfer</button></td>
+                        <td>${donation.name}</td>
+                        <td>₹${donation.amount}</td>
+                        <td>${donation.status}</td>
+                        <td><button onclick="transferDonation('${donation.id}')">Transfer</button></td>
                     </tr>
                 `;
             });
 
-            // Fetch Seekers
-            const seekerDocs = await db.collection("seekers").get();
-            seekerDocs.forEach(doc => {
-                let data = doc.data();
+            // Populate Seekers
+            seekers.forEach(seeker => {
                 seekerTable.innerHTML += `
                     <tr>
-                        <td>${data.name}</td>
-                        <td>${data.foodNeeded}</td>
-                        <td>₹${data.moneyNeeded}</td>
-                        <td>${data.status}</td>
+                        <td>${seeker.name}</td>
+                        <td>${seeker.foodNeeded || "N/A"}</td>
+                        <td>₹${seeker.moneyNeeded || "N/A"}</td>
+                        <td>${seeker.status}</td>
                     </tr>
                 `;
             });
         }
 
         // Transfer Donation
-        async function transferDonation(donationId, type) {
-            await db.collection("donations").doc(donationId).update({
-                status: "transferred"
+        async function transferDonation(donationId) {
+            const response = await fetch("/admin/transfer", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ donationId })
             });
-            alert("Donation Transferred!");
-            fetchData(); // Refresh the table
+
+            const result = await response.json();
+            alert(result.message);
+            fetchData(); // Refresh data
         }
 
-        // Load Data on Page Load
         fetchData();
     </script>
 </body>
