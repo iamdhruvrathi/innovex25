@@ -19,3 +19,10 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/", (req, res) => {
   res.render("home_page.ejs");
 });
+
+app.get("/donate", (req, res) => {
+  res.render("donate_page");
+});
+app.post("/donate", async (req, res) => {
+  console.log(res.body)
+});

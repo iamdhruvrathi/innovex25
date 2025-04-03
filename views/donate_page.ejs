@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate Food or Money</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Donate Food or Money</h1>
+    </header>
+
+    <main>
+        <form action="/donate?_method=PUT" method="POST">
+            <div>
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div>
+                <label for="mob">Mobile Number:</label>
+                <input type="tel" id="mob" name="mob" required>
+            </div>
+
+            <div>
+                <label for="address">Address:</label>
+                <textarea id="address" name="address" required></textarea>
+            </div>
+
+            <div>
+                <label for="type">Donation Type:</label>
+                <select id="type" name="type" required>
+                    <option value="food">Food</option>
+                    <option value="money">Money</option>
+                </select>
+            </div>
+
+            <div id="amountField" style="display: none;">
+                <label for="amount">Donation Amount:</label>
+                <input type="number" id="amount" name="amount" min="1">
+            </div>
+
+            <button type="submit">Donate</button>
+        </form>
+    </main>
+
+    <script>
+        
+        document.getElementById("type").addEventListener("change", function() {
+            let amountField = document.getElementById("amountField");
+            if (this.value === "money") {
+                amountField.style.display = "block";
+                document.getElementById("amount").required = true;
+            } else {
+                amountField.style.display = "none";
+                document.getElementById("amount").required = false;
+            }
+        });
+    </script>
+</body>
+</html>
