@@ -95,6 +95,8 @@ app.get("/thanks", (req, res) => {
   res.render("thank_you.ejs");
 });
 
+
+
 app.post("/volunteer", async (req, res) => {
   try {
     const volunteer = new Volunteer(
