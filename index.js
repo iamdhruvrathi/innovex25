@@ -24,6 +24,7 @@ app.get("/", (req, res) => {
 
 app.get("/donate", (req, res) => {
   res.render("donate_page");
+  
 });
 
 app.post("/donate", async (req, res) => {
@@ -55,7 +56,7 @@ app.post("/donate", async (req, res) => {
     );
 
     await Donation.create(donation);
-    res.json({ message: "Donation received. Thank you!" });
+     res.redirect("/thanks");
 
   } catch (error) {
     console.error("Error adding donation:", error);
@@ -80,7 +81,7 @@ app.post("/kitchen", async (req, res) => {
       req.body.donations
     );
     await Kitchen.create(kitchen);
-    res.json({ message: "Kitchen registered successfully!" });
+     res.redirect("/thanks");
   } catch (error) {
     console.error("Error adding kitchen:", error);
     res.status(500).json({ error: "Failed to register kitchen" });
@@ -89,6 +90,9 @@ app.post("/kitchen", async (req, res) => {
 
 app.get("/volunteer", (req, res) => {
   res.render("volunteer.ejs");
+});
+app.get("/thanks", (req, res) => {
+  res.render("thank_you.ejs");
 });
 
 
@@ -103,7 +107,7 @@ app.post("/volunteer", async (req, res) => {
       req.body.valid
     );
     await Volunteer.create(volunteer);
-    res.json({ message: "Volunteer registered successfully!" });
+     res.redirect("/");
   } catch (error) {
     console.error("Error adding volunteer:", error);
     res.status(500).json({ error: "Failed to register volunteer" });
@@ -127,11 +131,17 @@ app.post("/seeker", async (req, res) => {
       req.body.freq
     );
     await Seeker.create(seeker);
-    res.json({ message: "Seeker registered successfully!" });
+     res.redirect("/");
   } catch (error) {
     console.error("Error adding seeker:", error);
     res.status(500).json({ error: "Failed to register seeker" });
   }
 });
+
+
+app.get("/admin", (req, res) => {
+  res.render("admin.ejs");
+});
+
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
