@@ -132,4 +132,10 @@ app.post("/seeker", async (req, res) => {
   }
 });
 
+
+app.get("/admin", (req, res) => {
+  res.render("admin.ejs");
+});
+
+
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
