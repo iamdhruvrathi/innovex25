@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const ejsMate = require("ejs-mate");
 const { db } = require("./config/firebase.js");
+const sendEmail = require("./config/email.js"); // The email function we defined earlier
 const { Kitchen } = require("./models/Kitchen");
 const { Seeker } = require("./models/Seeker");
 const { Donation } = require("./models/Donation");
@@ -68,6 +69,7 @@ app.get("/kitchen", (req, res) => {
   res.render("kitchen_page_registration.ejs");
 });
 
+
 app.post("/kitchen", async (req, res) => {
   try {
     const kitchenData = {
@@ -103,8 +105,22 @@ app.post("/kitchen", async (req, res) => {
     } else {
       res.redirect("/thanks");
     }
+
+    // Background email sending ⏳
+    const seekersSnapshot = await db.collection("seekers").get();
+    const subject = "🚨 New Kitchen Available!";
+    const message = `Hey! A new kitchen "${kitchenData.name}" has just been registered at ${kitchenData.address}. Check it out!`;
+
+    seekersSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.contact) {
+        sendEmail(data.contact, subject, message)
+          .then(() => console.log(`Email sent to ${data.contact}`))
+          .catch(err => console.error(`Failed to send email to ${data.contact}`, err));
+      }
+    });
   } catch (error) {
-    console.error("Error adding kitchen:", error);
+    console.error("🔥 Error adding kitchen:", error);
     res.status(500).json({ error: "Failed to register kitchen" });
   }
 });
