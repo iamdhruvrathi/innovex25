@@ -43,19 +43,42 @@
     </main>
 
     <script>
-        document.getElementById("volunteerForm").addEventListener("submit", async function (e) {
-            e.preventDefault();
+        // document.getElementById("volunteerForm").addEventListener("submit", async function (e) {
+        //     e.preventDefault();
 
-            const formData = {
-                name: document.getElementById("name").value,
-                email: document.getElementById("email").value,
-                phNo: document.getElementById("phNo").value,
-                startDate: document.getElementById("startDate").value,
-                workType: document.getElementById("workType").value
-            };
+        //     const formData = {
+        //         name: document.getElementById("name").value,
+        //         email: document.getElementById("email").value,
+        //         phNo: document.getElementById("phNo").value,
+        //         startDate: document.getElementById("startDate").value,
+        //         workType: document.getElementById("workType").value
+        //     };
 
-            console.log("Volunteer Details:", formData);
+        //     console.log("Volunteer Details:", formData);
 
+        //     const response = await fetch("/volunteer", {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json"
+        //         },
+        //         body: JSON.stringify(formData)
+        //     });
+
+        //     const result = await response.json();
+        //     alert(result.message);
+        // });
+    document.getElementById("volunteerForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const formData = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            phNo: document.getElementById("phNo").value,
+            startDate: document.getElementById("startDate").value,
+            workType: document.getElementById("workType").value
+        };
+
+        try {
             const response = await fetch("/volunteer", {
                 method: "POST",
                 headers: {
@@ -64,9 +87,16 @@
                 body: JSON.stringify(formData)
             });
 
-            const result = await response.json();
-            alert(result.message);
-        });
+            if (response.ok) {
+                window.location.href = "/"; // Redirect to homepage after success
+            } else {
+                console.error("Registration failed");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    });
+
     </script>
 </body>
 </html>

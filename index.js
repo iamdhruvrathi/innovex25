@@ -150,12 +150,13 @@ app.post("/volunteer", async (req, res) => {
     }
 
     await db.collection("volunteers").add(volunteerData);
-    res.redirect("/");
+    res.status(200).json({ success: true }); // Send success response
   } catch (error) {
     console.error("Error adding volunteer:", error);
     res.status(500).json({ error: "Failed to register volunteer" });
   }
 });
+
 
 app.get("/seeker", (req, res) => {
   res.render("seeker_page.ejs");
