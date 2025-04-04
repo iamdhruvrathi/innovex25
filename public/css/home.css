@@ -266,6 +266,34 @@ body {
   overflow: hidden;
 }
 
+.btn-outline {
+  background: #0f0; /* Green background */
+  color: black; /* Black text */
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.btn-outline a {
+  color: black !important; /* Force black text */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.btn-outline:hover {
+  background: white;
+  color: black;
+}
+
+.btn-outline:hover a {
+  color: black;
+}
+
+
+
 .option-card::before {
   content: '';
   position: absolute;
@@ -715,3 +743,13 @@ body {
   margin-right: 10px;
   vertical-align: middle;
 }
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0f0; /* green on hover */
+  text-decoration: none;
+}
+
