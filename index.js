@@ -8,9 +8,7 @@ const { Seeker } = require("./models/Seeker");
 const { Donation } = require("./models/Donation");
 const { Volunteer } = require("./models/Volunteer");
 
-
-const deliveryRoutes = require("./index2"); 
-
+const deliveryRoutes = require("./index2");
 
 const app = express();
 const PORT = process.env.PORT || 8000; // Keep only one PORT setting
@@ -73,9 +71,6 @@ app.get("/kitchen", (req, res) => {
   res.render("kitchen_page_registration.ejs");
 });
 
-
-
-
 app.post("/kitchen", async (req, res) => {
   try {
     const kitchenData = {
@@ -90,7 +85,7 @@ app.post("/kitchen", async (req, res) => {
 
     console.log("kitchenData:", kitchenData);
 
-    // Create kitchen object and add to DB
+    // Create kitchen object (if using class):
     const kitchen = new Kitchen(
       kitchenData.name,
       kitchenData.address,
@@ -103,74 +98,33 @@ app.post("/kitchen", async (req, res) => {
 
     const id = await Kitchen.create(kitchen);
 
+    // 🧠 Check if it's AJAX (fetch)
     if (req.headers["content-type"] === "application/json") {
-      res.status(200).json({ message: "Kitchen registered successfully", kitchenId: id });
-    } else {
-      res.redirect("/thanks");
+      res
+        .status(200)
+        .json({ message: "Kitchen registered successfully", kitchenId: id });
     }
 
-    // Fetch seekers and score them
+    // Background email sending ⏳
     const seekersSnapshot = await db.collection("seekers").get();
-    let seekers = [];
+    const subject = "🚨 New Kitchen Available!";
+    const message = `Hey! A new kitchen "${kitchenData.name}" has just been registered at ${kitchenData.address}. Check it out!`;
 
-    seekersSnapshot.forEach(doc => {
+    seekersSnapshot.forEach((doc) => {
       const data = doc.data();
-      const dailyNeed = parseFloat(data.dailyNeed || 1);
-      const received = parseFloat(data.received || 0);
-      const score = 100 / dailyNeed * received;
-
-      seekers.push({
-        id: doc.id,
-        name: data.name,
-        contact: data.contact,
-        score,
-      });
+      if (data.contact) {
+        sendEmail(data.contact, subject, message)
+          .then(() => console.log(`Email sent to ${data.contact}`))
+          .catch((err) =>
+            console.error(`Failed to send email to ${data.contact}`, err)
+          );
+      }
     });
-
-    // Bubble sort seekers by ascending score
-    for (let i = 0; i < seekers.length - 1; i++) {
-      for (let j = 0; j < seekers.length - i - 1; j++) {
-        if (seekers[j].score > seekers[j + 1].score) {
-          [seekers[j], seekers[j + 1]] = [seekers[j + 1], seekers[j]];
-        }
-      }
-    }
-
-    console.log("Seekers:", seekers);
-
-    // function to notify seekers one-by-one
-    const notifySeekers = async (index = 0) => {
-      if (index >= seekers.length) {
-        console.log("✅ All seekers have been notified.");
-        return;
-      }
-
-      const seeker = seekers[index];
-      if (!seeker.contact) return notifySeekers(index + 1); 
-
-      const subject = "🚨 New Kitchen Needs You!";
-      const message = `Hi ${seeker.name},\n\nA new kitchen "${kitchenData.name}" located at "${kitchenData.address}" is available for delivery.\nPlease click here to accept the task.\n\n(If unclaimed in 1 minute, it will go to the next seeker.)`;
-
-      await sendEmail(seeker.contact, subject, message);
-      console.log(`📩 Email sent to ${seeker.name} (${seeker.contact})`);
-
-      // Wait 1 minute, then call next
-      setTimeout(() => {
-        notifySeekers(index + 1);
-      }, 60 * 1000);
-    };
-
-    // Start notifying seekers
-    notifySeekers();
-
   } catch (error) {
     console.error("🔥 Error adding kitchen:", error);
     res.status(500).json({ error: "Failed to register kitchen" });
   }
 });
-
-
-
 
 app.get("/volunteer", (req, res) => {
   res.render("volunteer.ejs");
@@ -202,7 +156,6 @@ app.post("/volunteer", async (req, res) => {
     res.status(500).json({ error: "Failed to register volunteer" });
   }
 });
-
 
 app.get("/seeker", (req, res) => {
   res.render("seeker_page.ejs");
@@ -237,12 +190,10 @@ app.post("/seeker", async (req, res) => {
 
     // 🛠 Redirect after successful registration
     if (req.headers["content-type"] === "application/json") {
-      res
-        .status(200)
-        .json({
-          message: "Seeker registered successfully",
-          redirect: "/thanks",
-        });
+      res.status(200).json({
+        message: "Seeker registered successfully",
+        redirect: "/thanks",
+      });
     } else {
       res.redirect("/thanks");
     }
@@ -251,7 +202,6 @@ app.post("/seeker", async (req, res) => {
     res.status(500).json({ error: "Failed to register seeker" });
   }
 });
-
 
 app.get("/admin", async (req, res) => {
   try {
@@ -323,9 +273,6 @@ app.get("/admin", async (req, res) => {
     res.status(500).send("Error fetching data");
   }
 });
-
-
-
 
 async function geocodeAddress(address) {
   const query = encodeURIComponent(address);
@@ -399,8 +346,6 @@ app.get("/map", async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
-
-
 
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)
