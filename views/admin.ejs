@@ -15,12 +15,28 @@
       border-bottom: 1px solid #ddd;
     }
     .map-header h3, .map-item div {
-      width: 45%;
+      width: 30%;
       text-align: center;
     }
     .arrow {
       width: 10%;
       text-align: center;
+    }
+    .assign-btn {
+      width: 20%;
+      text-align: center;
+    }
+    .assign-btn a {
+      background-color: #4CAF50;
+      color: white;
+      padding: 6px 12px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: normal;
+      font-size: 14px;
+    }
+    .assign-btn a:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
@@ -45,14 +61,12 @@
             <p><strong>Address:</strong> <%= kitchen.address %></p>
             <p><strong>Daily Production:</strong> <%= kitchen.dailyProd %></p>
             <p><strong>Avg Waste:</strong> <%= kitchen.avgWaste %></p>
-            <p><strong>Contact:</strong> 📞 <%= kitchen.contact %></p>
+            <p><strong>Contact:</strong>  <%= kitchen.contact %></p>
           </div>
         <% }); %>
       </div>
     </section>
 
-    <!-- Seekers -->
-    
     <!-- Kitchen to Seeker Mapping -->
     <section class="mapping">
       <h2>Food Distribution</h2>
@@ -61,17 +75,19 @@
           <h3>Kitchen</h3>
           <h3>→</h3>
           <h3>Seeker</h3>
+          <div class="assign-btn"></div>
         </div>
         <% randomMappings.forEach(mapping => { %>
           <div class="map-item">
             <div class="kitchen-box">
-              <strong><%= mapping.kitchen.name %></strong><br>
-              <small>📞 <%= mapping.kitchen.contact %></small>
+              <strong><%= mapping.kitchen.name %></strong>
             </div>
             <div class="arrow">→</div>
             <div class="seeker-box">
-              <strong><%= mapping.seeker.name %></strong><br>
-              <small>📞 <%= mapping.seeker.contact %></small>
+              <strong><%= mapping.seeker.name %></strong>
+            </div>
+            <div class="assign-btn">
+              <a href="/notify">Assign Delivery Agent</a>
             </div>
           </div>
         <% }); %>
