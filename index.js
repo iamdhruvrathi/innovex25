@@ -256,20 +256,7 @@ app.get("/admin", async (req, res) => {
     res.status(500).send("Error fetching data");
   }
 });
-// In Express backend
-// app.get("/map", async (req, res) => {
-//   try {
-//     const kitchensSnapshot = await db.collection("kitchens").get();
-//     const kitchens = kitchensSnapshot.docs.map(doc => ({
-//       id: doc.id,
-//       ...doc.data(),
-//     }));
-//     res.render("map", { kitchens }); // Renders views/map.ejs
-//   } catch (error) {
-//     console.error("Error fetching kitchens:", error);
-//     res.status(500).send("Server Error");
-//   }
-// });
+
 async function geocodeAddress(address) {
   const query = encodeURIComponent(address);
   const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`;
