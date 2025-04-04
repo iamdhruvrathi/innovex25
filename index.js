@@ -165,6 +165,9 @@ app.post("/volunteer", async (req, res) => {
 app.get("/seeker", (req, res) => {
   res.render("seeker_page.ejs");
 });
+app.get("/delivery", (req, res) => {
+  res.render("delivery.ejs");
+});
 
 app.post("/seeker", async (req, res) => {
   try {
