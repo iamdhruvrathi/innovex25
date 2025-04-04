@@ -8,6 +8,10 @@ const { Seeker } = require("./models/Seeker");
 const { Donation } = require("./models/Donation");
 const { Volunteer } = require("./models/Volunteer");
 
+
+const deliveryRoutes = require("./index2"); 
+
+
 const app = express();
 const PORT = process.env.PORT || 8000; // Keep only one PORT setting
 
@@ -18,6 +22,8 @@ app.set("view engine", "ejs");
 app.engine("ejs", ejsMate);
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/", deliveryRoutes);
 
 app.get("/", (req, res) => {
   res.render("home_page");
@@ -62,8 +68,6 @@ app.post("/donate", async (req, res) => {
     res.status(500).json({ error: "Failed to process donation" });
   }
 });
-
-
 
 app.get("/kitchen", (req, res) => {
   res.render("kitchen_page_registration.ejs");
