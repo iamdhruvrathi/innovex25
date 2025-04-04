@@ -74,6 +74,8 @@ app.get("/kitchen", (req, res) => {
 });
 
 
+
+
 app.post("/kitchen", async (req, res) => {
   try {
     const kitchenData = {
@@ -88,7 +90,7 @@ app.post("/kitchen", async (req, res) => {
 
     console.log("kitchenData:", kitchenData);
 
-    // Create kitchen object (if using class):
+    // Create kitchen object and add to DB
     const kitchen = new Kitchen(
       kitchenData.name,
       kitchenData.address,
@@ -101,33 +103,73 @@ app.post("/kitchen", async (req, res) => {
 
     const id = await Kitchen.create(kitchen);
 
-    // 🧠 Check if it's AJAX (fetch)
     if (req.headers["content-type"] === "application/json") {
-      res
-        .status(200)
-        .json({ message: "Kitchen registered successfully", kitchenId: id });
+      res.status(200).json({ message: "Kitchen registered successfully", kitchenId: id });
     } else {
       res.redirect("/thanks");
     }
 
-    // Background email sending ⏳
+    // Fetch seekers and score them
     const seekersSnapshot = await db.collection("seekers").get();
-    const subject = "🚨 New Kitchen Available!";
-    const message = `Hey! A new kitchen "${kitchenData.name}" has just been registered at ${kitchenData.address}. Check it out!`;
+    let seekers = [];
 
     seekersSnapshot.forEach(doc => {
       const data = doc.data();
-      if (data.contact) {
-        sendEmail(data.contact, subject, message)
-          .then(() => console.log(`Email sent to ${data.contact}`))
-          .catch(err => console.error(`Failed to send email to ${data.contact}`, err));
-      }
+      const dailyNeed = parseFloat(data.dailyNeed || 1);
+      const received = parseFloat(data.received || 0);
+      const score = 100 / dailyNeed * received;
+
+      seekers.push({
+        id: doc.id,
+        name: data.name,
+        contact: data.contact,
+        score,
+      });
     });
+
+    // Bubble sort seekers by ascending score
+    for (let i = 0; i < seekers.length - 1; i++) {
+      for (let j = 0; j < seekers.length - i - 1; j++) {
+        if (seekers[j].score > seekers[j + 1].score) {
+          [seekers[j], seekers[j + 1]] = [seekers[j + 1], seekers[j]];
+        }
+      }
+    }
+
+    console.log("Seekers:", seekers);
+
+    // function to notify seekers one-by-one
+    const notifySeekers = async (index = 0) => {
+      if (index >= seekers.length) {
+        console.log("✅ All seekers have been notified.");
+        return;
+      }
+
+      const seeker = seekers[index];
+      if (!seeker.contact) return notifySeekers(index + 1); 
+
+      const subject = "🚨 New Kitchen Needs You!";
+      const message = `Hi ${seeker.name},\n\nA new kitchen "${kitchenData.name}" located at "${kitchenData.address}" is available for delivery.\nPlease click here to accept the task.\n\n(If unclaimed in 1 minute, it will go to the next seeker.)`;
+
+      await sendEmail(seeker.contact, subject, message);
+      console.log(`📩 Email sent to ${seeker.name} (${seeker.contact})`);
+
+      // Wait 1 minute, then call next
+      setTimeout(() => {
+        notifySeekers(index + 1);
+      }, 60 * 1000);
+    };
+
+    // Start notifying seekers
+    notifySeekers();
+
   } catch (error) {
     console.error("🔥 Error adding kitchen:", error);
     res.status(500).json({ error: "Failed to register kitchen" });
   }
 });
+
+
 
 
 app.get("/volunteer", (req, res) => {
