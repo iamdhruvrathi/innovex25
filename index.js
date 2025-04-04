@@ -83,7 +83,7 @@ app.post("/kitchen", async (req, res) => {
       donations: req.body.donations || "0",
     };
 
-    console.log("kitchenData:", kitchenData);
+    
 
     // Create kitchen object (if using class)
     const kitchen = new Kitchen(
