@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link rel="stylesheet" href="/css/admin.css">
+    <style>
+        .map-header, .map-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .map-header h3, .map-item div {
+            width: 45%;
+            text-align: center;
+        }
+        .arrow {
+            width: 10%;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <div class="admin-container">
@@ -51,6 +69,11 @@
         <section class="mapping">
             <h2>Food Distribution</h2>
             <div class="map-container">
+                <div class="map-header">
+                    <h3>Kitchen</h3>
+                    <h3>→</h3>
+                    <h3>Seeker</h3>
+                </div>
                 <% randomMappings.forEach(mapping => { %>
                     <div class="map-item">
                         <div class="kitchen-box"><%= mapping.kitchen.name %></div>
