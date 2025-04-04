@@ -255,6 +255,41 @@ app.get("/admin", async (req, res) => {
     res.status(500).send("Error fetching data");
   }
 });
+// In Express backend
+// app.get("/map", async (req, res) => {
+//   try {
+//     const kitchensSnapshot = await db.collection("kitchens").get();
+//     const kitchens = kitchensSnapshot.docs.map(doc => ({
+//       id: doc.id,
+//       ...doc.data(),
+//     }));
+//     res.render("map", { kitchens }); // Renders views/map.ejs
+//   } catch (error) {
+//     console.error("Error fetching kitchens:", error);
+//     res.status(500).send("Server Error");
+//   }
+// });
+app.get("/map", async (req, res) => {
+  try {
+    const kitchensSnapshot = await db.collection("kitchens").get();
+    const kitchens = kitchensSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    // Console each kitchen's address
+    kitchens.forEach(kitchen => {
+      console.log(`Kitchen: ${kitchen.name || "Unnamed"}, Address: ${kitchen.address}`);
+    });
+
+    res.render("map", { kitchens }); // Renders views/map.ejs
+  } catch (error) {
+    console.error("Error fetching kitchens:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+
 
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)
