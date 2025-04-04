@@ -1,0 +1,46 @@
+<!-- deliveries.ejs -->
+<h2>Available Deliveries</h2>
+<div id="deliveries">
+  <% deliveries.forEach(delivery => { %>
+    <div class="delivery" id="delivery-<%= delivery.kitchen.id %>-<%= delivery.seeker.id %>">
+      <p><strong>Kitchen:</strong> <%= delivery.kitchen.name %></p>
+      <p><strong>Seeker:</strong> <%= delivery.seeker.address %></p>
+      <p><strong>Expires At:</strong> <%= delivery.expiresAt.toLocaleString() %></p>
+
+      <form onsubmit="acceptDelivery(event, '<%= delivery.kitchen.id %>', '<%= delivery.seeker.id %>')">
+        <input type="email" name="email" placeholder="Enter your email" required />
+        <button type="submit">Accept Delivery</button>
+      </form>
+    </div>
+  <% }) %>
+</div>
+
+<script>
+async function acceptDelivery(event, kitchenId, seekerId) {
+  event.preventDefault();
+
+  const form = event.target;
+  const email = form.querySelector("input[name='email']").value;
+
+  try {
+    const response = await fetch("/deliveries/accept", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, kitchenId, seekerId }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      // Remove the accepted delivery from the page
+      document.getElementById(`delivery-${kitchenId}-${seekerId}`).remove();
+      alert("Delivery accepted!");
+    } else {
+      alert(data.error || "Failed to accept delivery");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Something went wrong");
+  }
+}
+</script>
