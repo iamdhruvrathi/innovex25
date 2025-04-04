@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { db } = require("./config/firebase");
+const sendEmail = require("./config/email"); // import your reusable email sender
+
 
 // GET /deliveries - Show delivery tasks
 router.get("/deliveries", async (req, res) => {
@@ -57,6 +59,73 @@ router.post("/deliveries/accept", async (req, res) => {
       res.status(500).json({ error: "Failed to accept delivery" });
     }
   });
-  
+
+// Show the notify page with a button
+router.get("/notify", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+        <title>Notify Deliverers</title>
+        <style>
+          body { font-family: Arial; text-align: center; padding-top: 50px; }
+          button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+          }
+          button:hover {
+            background-color: #45a049;
+          }
+        </style>
+      </head>
+      <body>
+        <h2>Notify All Delivery Partners</h2>
+        <form method="POST" action="/notify">
+          <button type="submit">Send Emails</button>
+        </form>
+      </body>
+    </html>
+  `);
+});
+
+// Handle the POST request to send emails
+router.post("/notify", async (req, res) => {
+  try {
+    const snapshot = await db.collection("delivers").get();
+    const deliverers = snapshot.docs.map(doc => doc.data());
+
+    if (deliverers.length === 0) {
+      return res.send("No deliverers found.");
+    }
+
+    for (const deliverer of deliverers) {
+      const subject = "🚚 New Deliveries Available!";
+      const text = `
+Hi ${deliverer.name},
+
+We have fresh delivery tasks available now!
+
+Click below to view and accept available tasks:
+http://localhost:3000/deliveries
+
+Thank you for being part of our mission to serve the community.
+
+– Team FoodAid
+      `;
+
+      await sendEmail(deliverer.email, subject, text);
+    }
+
+    res.send("Emails sent successfully to all deliverers!");
+  } catch (err) {
+    console.error("Error sending emails:", err);
+    res.status(500).send("Something went wrong while sending emails.");
+  }
+});
+
 
 module.exports = router;
