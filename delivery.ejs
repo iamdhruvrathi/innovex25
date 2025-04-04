@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Community Kitchen - Food Tracking</title>
+    <style>
+      /* All your CSS styles remain unchanged */
+      /* ...[CSS STYLES AS IN YOUR ORIGINAL FILE]... */
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="title">Community Kitchen - Food Tracking</div>
+      <div class="info">
+        <div class="row">
+          <div class="col-7">
+            <span id="heading">Order Date</span><br />
+            <span id="details"><%= orderDate || '1 April 2025' %></span>
+          </div>
+          <div class="col-5 pull-right">
+            <span id="heading">Food ID</span><br />
+            <span id="details"><%= orderId || 'CK#FA2357' %></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pricing">
+        <% if (orderItems && orderItems.length > 0) { %> <%
+        orderItems.forEach(item => { %>
+        <div class="row">
+          <div class="col-9"><span id="name"><%= item.name %></span></div>
+          <div class="col-3"><span id="price">₹<%= item.price %></span></div>
+        </div>
+        <% }) %> <% } else { %>
+        <div class="row">
+          <div class="col-9"><span id="name">Veg Biryani (Lunch)</span></div>
+          <div class="col-3"><span id="price">₹50</span></div>
+        </div>
+        <div class="row">
+          <div class="col-9"><span id="name">Packaging & Handling</span></div>
+          <div class="col-3"><span id="price">₹5</span></div>
+        </div>
+        <% } %>
+      </div>
+
+      <div class="total">
+        <div class="row">
+          <div class="col-9"></div>
+          <div class="col-3"><big>₹<%= total || 55 %></big></div>
+        </div>
+      </div>
+
+      <div class="tracking">
+        <div class="title">Tracking Progress</div>
+      </div>
+
+      <div class="progress-track">
+        <ul id="progressbar">
+          <li
+            class="step0 <%= trackingStatus >= 1 ? 'active' : '' %>"
+            id="step1"
+          >
+            Requested
+          </li>
+          <li
+            class="step0 <%= trackingStatus >= 2 ? 'active' : '' %> text-center"
+            id="step2"
+          >
+            Prepared
+          </li>
+          <li
+            class="step0 <%= trackingStatus >= 3 ? 'active' : '' %> text-right"
+            id="step3"
+          >
+            Packed
+          </li>
+          <li
+            class="step0 <%= trackingStatus >= 4 ? 'active' : '' %> text-right"
+            id="step4"
+          >
+            Delivered
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer">
+        <div class="row">
+          <div class="col-10">Need help? <a href="#">Contact our team</a></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
