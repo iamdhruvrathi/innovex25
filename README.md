@@ -1,54 +1,137 @@
 # Food Redistribution Platform - README
 
-## Overview
-Our platform is designed to help reduce food wastage by connecting restaurants and other food providers with consumers who need food. By redistributing surplus food from kitchens to seekers such as government colleges, NGOs, and old age homes, we aim to create a sustainable and efficient food-sharing ecosystem.
+## KhanaConnect
 
-## Features
+## Overview
+
+KhanaConnect is a simple, impactful platform built to tackle food waste by connecting hotels, restaurants, and other kitchens with people and institutions that genuinely need food. Our goal is to create a smarter and more humane way to make sure no meal goes to waste.
+
+## Key Features
 
 ### 1. Kitchen Partnership
-Kitchens and restaurants can partner with our platform to share their daily leftover food with consumers in need. This helps reduce food wastage and benefits communities facing food insecurity. Additionally, for food safety compliance, all kitchens must provide their FSSAI code during registration.
+
+Kitchens and restaurants can sign up to share their daily surplus food with those in need. To ensure food safety, all kitchens are required to submit their FSSAI code during registration.
 
 ### 2. Seekers - Food Consumers
-Seekers on our platform include government colleges, NGOs, old age homes, and other institutions that can request and receive leftover food from registered kitchens. This system ensures that excess food is put to good use rather than being discarded.
+
+Seekers include government colleges, NGOs, old age homes, and similar institutions. They can register to request leftover food, helping ensure excess food is redirected instead of discarded.
 
 ### 3. Real-time Frontend Dashboard
-Users can view a dynamic frontend that displays the number of registered kitchens and seekers, along with how they are connected through the platform.
 
-### 4. Interactive Map Integration
-Our platform features an interactive map that allows both kitchens and seekers to locate nearby partners. This helps in easy coordination for food redistribution.
+We’ve built a dynamic frontend dashboard that shows live statistics—like the number of kitchens and seekers—and how they’re connected on our platform.
 
-### 5. Volunteer System for Food Delivery
-We provide a dedicated page where volunteers can sign up to assist in food delivery between kitchens and seekers, ensuring smooth logistics and timely distribution.
+### 4. Interactive Map
 
-### 6. Automated Email Notification System
-To streamline communication, we have developed an automated email notification system:
-- When a kitchen registers, the admin is notified.
-- When a seeker requests food, the kitchens are notified.
-- When food is being delivered, delivery personnel receive email notifications to coordinate the process.
+A built-in map helps kitchens and seekers find each other based on location. This makes coordination and logistics much easier.
 
-### 7. Smart Food Distribution Algorithm
-Our platform incorporates a smart algorithm that efficiently distributes surplus food to the nearest and most in-need seeker. The algorithm takes into account multiple factors such as:
-- Number of food requests received by a seeker
-- Distance between the kitchen and the seeker
-- Time taken for delivery
+### 5. Volunteer Delivery System
 
-## How It Works
-1. **Kitchen Registration:** Kitchens register on the platform and list their daily leftover food. They must also provide their FSSAI code to ensure food safety compliance.
-2. **Seeker Registration:** Seekers register and request food as needed.
-3. **Matching Algorithm:** The system matches food providers with seekers based on need and proximity.
-4. **Volunteer Assignment:** Volunteers help in delivering food between the kitchens and seekers.
-5. **Email Notifications:** All stakeholders (kitchens, seekers, delivery personnel) receive real-time email updates for smooth coordination.
-6. **Food Delivery & Completion:** The food is successfully delivered, helping reduce waste and support communities in need.
+A dedicated page allows volunteers to sign up and help deliver food between kitchens and seekers. This keeps the process smooth and efficient.
 
-## Contribution
-If you are interested in contributing to this project, please feel free to submit a pull request on our GitHub repository. Your help in improving the platform is always welcome!
+### 6. Email Notifications
 
-## License
-This project is licensed under the MIT License.
+Our system sends automatic email alerts:
 
-## Contact
-For any inquiries, feel free to reach out to our team via email or visit our website.
+- To admin, and seekers when a new kitchen registers.
+    
+- To delivery agents, when a delivery is ready to be fulfiled.
+We have a pre built database of delivery agents, who will be notified throught email when a food is ready to be picked up. They can confirm
+their task by visiting the provided link and confirming their identity.
+    
+
+### 7. Smart Matching Algorithm
+
+We use a thoughtful algorithm to prioritize food distribution. It looks at factors like:
+
+- How many times a seeker has received food
+    
+- How much food they need daily
+    
+- Proximity to the kitchen This helps us ensure fair, and efficient distribution.
+    
+
+## How our system works
+
+1. **Kitchen Registration**: Kitchens list leftover food and submit their FSSAI code for safety compliance.
+    
+2. **Seeker Registration**: Institutions sign up, requesting their food.
+    
+3. **Matching Process**: The system pairs kitchens with seekers based on need and distance.
+    
+4. **Volunteer Involvement**: Delivery employees or volunteers will help with pickup and delivery.
+    
+5. **Email Alerts**: Automated notifications ensure smooth coordination.
+    
+6. **Delivery Completion**: Food is delivered where it’s needed—on time and safely.
+    
 
 ---
-By using our platform, we can collectively work towards reducing food wastage and ensuring that surplus food reaches those who need it the most.
+
+With KhanaConnect, we’re not just cutting down on food waste—we’re building a community that cares. Every shared meal counts.
+
+---
+
+
+# Technology stack used:
+
+Technology Stack Used
+Our platform is built using the following technologies:
+
+- Express.js – Backend framework for handling server logic and API routes
+
+- Node.js – JavaScript runtime for building the server-side application
+
+- Firebase Cloud Firestore – NoSQL database for storing kitchen, seeker, and donations data
+
+- EJS (Embedded JavaScript) – Template engine for rendering dynamic content on the frontend
+
+- HTML & CSS – For structuring and styling the user interface
+
+
+
+## Database Schema:
+
+1. Kitchens:
+- name
+- certifications
+- delivery needed or not
+- daily production
+- average waste
+
+2. Seekers
+   - institution type
+   - address
+   - contact
+   - daily need
+   - frequency needed
+   - recieved (auto increment)
+  
+3. Volunteers
+- name
+- email
+- phone
+- start Date
+- work Type
+- valid (boolean)
+
+4. Kitchen Donations
+- DateTime
+- expiry info
+- food amount
+- food type
+- kitchenID
+- seekerID
+
+5. Donations
+- name
+- email
+- donation type
+- address 
+- quantity
+  
+6. Delivery Employees
+- name
+- email
+- address
+- phone number
 
