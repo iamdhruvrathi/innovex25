@@ -54,15 +54,23 @@ h1, h2 {
 .map-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 10px;
+    width: 100%;
 }
 
-.map-item {
+.map-header, .map-item {
     display: flex;
     align-items: center;
-    gap: 15px;
-    font-size: 18px;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+    flex-wrap: wrap;
+}
+
+.map-header h3, .map-item div {
+    width: 25%;
+    text-align: center;
+    font-weight: bold;
 }
 
 .kitchen-box, .seeker-box {
@@ -76,4 +84,55 @@ h1, h2 {
 .arrow {
     font-size: 24px;
     color: #555;
+    width: 10%;
+    text-align: center;
+}
+
+.assign-btn {
+    width: 20%;
+    text-align: center;
+}
+
+.assign-btn a {
+    background-color: #4CAF50;
+    color: white;
+    padding: 6px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: normal;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.assign-btn a:hover {
+    background-color: #45a049;
+}
+
+/* ✅ Responsive Design */
+@media (max-width: 768px) {
+    .map-header, .map-item {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .map-header h3, .map-item div {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .assign-btn {
+        width: 100%;
+    }
+
+    .assign-btn a {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .arrow {
+        width: 100%;
+        font-size: 20px;
+        margin: 5px 0;
+    }
 }
