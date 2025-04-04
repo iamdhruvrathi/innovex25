@@ -7,8 +7,8 @@ const sendEmail = require("./config/email"); // import your reusable email sende
 router.get("/deliveries", async (req, res) => {
   try {
     // Get kitchens and seekers
-    const kitchensSnapshot = await db.collection("kitchens").limit(4).get();
-    const seekersSnapshot = await db.collection("seekers").limit(4).get();
+    const kitchensSnapshot = await db.collection("kitchens").limit(3).get();
+    const seekersSnapshot = await db.collection("seekers").limit(3).get();
 
     const kitchens = kitchensSnapshot.docs.map((doc) => ({
       id: doc.id,

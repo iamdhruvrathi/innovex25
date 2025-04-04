@@ -1,46 +1,118 @@
-<!-- deliveries.ejs -->
-<h2>Available Deliveries</h2>
-<div id="deliveries">
-  <% deliveries.forEach(delivery => { %>
-    <div class="delivery" id="delivery-<%= delivery.kitchen.id %>-<%= delivery.seeker.id %>">
-      <p><strong>Kitchen:</strong> <%= delivery.kitchen.name %></p>
-      <p><strong>Seeker:</strong> <%= delivery.seeker.address %></p>
-      <p><strong>Expires At:</strong> <%= delivery.expiresAt.toLocaleString() %></p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Deliveries</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        #deliveries {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            padding: 20px;
+        }
+        .delivery-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+        .delivery-card:hover {
+            transform: translateY(-5px);
+        }
+        h3 {
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input[type="email"] {
+            padding: 10px;
+            width: 80%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+        }
+        button:hover {
+            background-color: #219150;
+        }
+    </style>
+</head>
+<body>
 
-      <form onsubmit="acceptDelivery(event, '<%= delivery.kitchen.id %>', '<%= delivery.seeker.id %>')">
-        <input type="email" name="email" placeholder="Enter your email" required />
-        <button type="submit">Accept Delivery</button>
-      </form>
+    <h2>Available Deliveries</h2>
+    <div id="deliveries">
+      <% deliveries.forEach(delivery => { %>
+        <div class="delivery-card" id="delivery-<%= delivery.kitchen.id %>-<%= delivery.seeker.id %>">
+          <h3>Kitchen: <%= delivery.kitchen.name %></h3>
+          <p><strong>Seeker:</strong> <%= delivery.seeker.address %></p>
+          <p><strong>Expires At:</strong> <%= delivery.expiresAt.toLocaleString() %></p>
+
+          <form onsubmit="acceptDelivery(event, '<%= delivery.kitchen.id %>', '<%= delivery.seeker.id %>')">
+            <input type="email" name="email" placeholder="Enter your email" required />
+            <button type="submit">Accept Delivery</button>
+          </form>
+        </div>
+      <% }) %>
     </div>
-  <% }) %>
-</div>
 
-<script>
-async function acceptDelivery(event, kitchenId, seekerId) {
-  event.preventDefault();
+    <script>
+    async function acceptDelivery(event, kitchenId, seekerId) {
+      event.preventDefault();
 
-  const form = event.target;
-  const email = form.querySelector("input[name='email']").value;
+      const form = event.target;
+      const email = form.querySelector("input[name='email']").value;
 
-  try {
-    const response = await fetch("/deliveries/accept", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, kitchenId, seekerId }),
-    });
+      try {
+        const response = await fetch("/deliveries/accept", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, kitchenId, seekerId }),
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (data.success) {
-      // Remove the accepted delivery from the page
-      document.getElementById(`delivery-${kitchenId}-${seekerId}`).remove();
-      alert("Delivery accepted!");
-    } else {
-      alert(data.error || "Failed to accept delivery");
+        if (data.success) {
+          document.getElementById(`delivery-${kitchenId}-${seekerId}`).remove();
+          alert("Delivery accepted!");
+        } else {
+          alert(data.error || "Failed to accept delivery");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Something went wrong");
+      }
     }
-  } catch (error) {
-    console.error("Error:", error);
-    alert("Something went wrong");
-  }
-}
-</script>
+    </script>
+
+</body>
+</html>
