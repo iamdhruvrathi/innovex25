@@ -1,88 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    <link rel="stylesheet" href="/css/admin.css">
-    <style>
-        .map-header, .map-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            padding: 8px 0;
-            border-bottom: 1px solid #ddd;
-        }
-        .map-header h3, .map-item div {
-            width: 45%;
-            text-align: center;
-        }
-        .arrow {
-            width: 10%;
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/css/admin.css"/>
+  <style>
+    .map-header, .map-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      padding: 8px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .map-header h3, .map-item div {
+      width: 45%;
+      text-align: center;
+    }
+    .arrow {
+      width: 10%;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-    <div class="admin-container">
-        <h1>Admin Dashboard</h1>
+  <div class="admin-container">
+    <h1>Admin Dashboard</h1>
 
-        <!-- Total Donations -->
-        <section class="donation-summary">
-            <h2>Total Donations</h2>
-            <p><strong>Money Donated:</strong> ₹ <%= totalMoneyDonated %></p>
-            <p><strong>Total Food Donated:</strong> <%= totalFoodQuantity %> Units</p>
-        </section>
+    <!-- Total Donations -->
+    <section class="donation-summary">
+      <h2>Total Donations</h2>
+      <p><strong>Money Donated:</strong> ₹ <%= totalMoneyDonated %></p>
+      <p><strong>Total Food Donated:</strong> <%= totalFoodQuantity %> Units</p>
+    </section>
 
-        <!-- Kitchens -->
-        <section class="kitchen-section">
-            <h2>Kitchens</h2>
-            <div class="kitchens">
-                <% kitchens.forEach(kitchen => { %>
-                    <div class="kitchen-card">
-                        <h3><%= kitchen.name %></h3>
-                        <p><strong>Address:</strong> <%= kitchen.address %></p>
-                        <p><strong>Daily Production:</strong> <%= kitchen.dailyProd %></p>
-                        <p><strong>Avg Waste:</strong> <%= kitchen.avgWaste %></p>
-                    </div>
-                <% }); %>
+    <!-- Kitchens -->
+    <section class="kitchen-section">
+      <h2>Kitchens</h2>
+      <div class="kitchens">
+        <% kitchens.forEach(kitchen => { %>
+          <div class="kitchen-card">
+            <h3><%= kitchen.name %></h3>
+            <p><strong>Address:</strong> <%= kitchen.address %></p>
+            <p><strong>Daily Production:</strong> <%= kitchen.dailyProd %></p>
+            <p><strong>Avg Waste:</strong> <%= kitchen.avgWaste %></p>
+            <p><strong>Contact:</strong> 📞 <%= kitchen.contact %></p>
+          </div>
+        <% }); %>
+      </div>
+    </section>
+
+    <!-- Seekers -->
+    <section class="seeker-section">
+      <h2>Seekers</h2>
+      <div class="seekers">
+        <% seekers.forEach(seeker => { %>
+          <div class="seeker-card">
+            <h3><%= seeker.name %></h3>
+            <p><strong>Type:</strong> <%= seeker.type %></p>
+            <p><strong>Daily Need:</strong> <%= seeker.dailyNeed %></p>
+            <p><strong>Contact:</strong> 📞 <%= seeker.contact %></p>
+          </div>
+        <% }); %>
+      </div>
+    </section>
+
+    <!-- Kitchen to Seeker Mapping -->
+    <section class="mapping">
+      <h2>Food Distribution</h2>
+      <div class="map-container">
+        <div class="map-header">
+          <h3>Kitchen</h3>
+          <h3>→</h3>
+          <h3>Seeker</h3>
+        </div>
+        <% randomMappings.forEach(mapping => { %>
+          <div class="map-item">
+            <div class="kitchen-box">
+              <strong><%= mapping.kitchen.name %></strong><br>
+              <small>📞 <%= mapping.kitchen.contact %></small>
             </div>
-        </section>
-
-        <!-- Seekers -->
-        <section class="seeker-section">
-            <h2>Seekers</h2>
-            <div class="seekers">
-                <% seekers.forEach(seeker => { %>
-                    <div class="seeker-card">
-                        <h3><%= seeker.name %></h3>
-                        <p><strong>Type:</strong> <%= seeker.type %></p>
-                        <p><strong>Daily Need:</strong> <%= seeker.dailyNeed %></p>
-                        <p><strong>Contact:</strong> <%= seeker.contact %></p>
-                    </div>
-                <% }); %>
+            <div class="arrow">→</div>
+            <div class="seeker-box">
+              <strong><%= mapping.seeker.name %></strong><br>
+              <small>📞 <%= mapping.seeker.contact %></small>
             </div>
-        </section>
-
-        <!-- Kitchen to Seeker Mapping -->
-        <section class="mapping">
-            <h2>Food Distribution</h2>
-            <div class="map-container">
-                <div class="map-header">
-                    <h3>Kitchen</h3>
-                    <h3>→</h3>
-                    <h3>Seeker</h3>
-                </div>
-                <% randomMappings.forEach(mapping => { %>
-                    <div class="map-item">
-                        <div class="kitchen-box"><%= mapping.kitchen.name %></div>
-                        <div class="arrow">→</div>
-                        <div class="seeker-box"><%= mapping.seeker.name %></div>
-                    </div>
-                <% }); %>
-            </div>
-        </section>
-    </div>
+          </div>
+        <% }); %>
+      </div>
+    </section>
+  </div>
 </body>
 </html>

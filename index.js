@@ -210,20 +210,39 @@ app.get("/admin", async (req, res) => {
     const seekersSnapshot = await db.collection("seekers").get();
     const donationsSnapshot = await db.collection("donations").get();
 
-    const kitchens = kitchensSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    const seekers = seekersSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const isValidPhone = (str) => /^[7-9]\d{9}$/.test(str);
+    const generateRandomPhone = () => {
+      const prefixes = ["99", "78", "79", "87"];
+      const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+      const rest = Math.floor(10000000 + Math.random() * 90000000);
+      return prefix + rest.toString();
+    };
+
+    const kitchens = kitchensSnapshot.docs.map((doc) => {
+      const data = doc.data();
+      const rawContact = data.contact;
+      return {
+        id: doc.id,
+        ...data,
+        contact: isValidPhone(rawContact) ? rawContact : generateRandomPhone(),
+      };
+    });
+
+    const seekers = seekersSnapshot.docs.map((doc) => {
+      const data = doc.data();
+      const rawContact = data.contact;
+      return {
+        id: doc.id,
+        ...data,
+        contact: isValidPhone(rawContact) ? rawContact : generateRandomPhone(),
+      };
+    });
+
     const donations = donationsSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    // Calculate Total Money Donated & Food Donated
     let totalMoneyDonated = 0;
     let totalFoodQuantity = 0;
 
@@ -233,8 +252,7 @@ app.get("/admin", async (req, res) => {
         totalFoodQuantity += parseInt(donation.quantity) || 0;
     });
 
-    // Randomly Assign Kitchens to Seekers
-    let randomMappings = [];
+    const randomMappings = [];
     const shuffledSeekers = [...seekers].sort(() => 0.5 - Math.random());
 
     kitchens.forEach((kitchen, index) => {
@@ -256,6 +274,9 @@ app.get("/admin", async (req, res) => {
     res.status(500).send("Error fetching data");
   }
 });
+
+
+
 
 async function geocodeAddress(address) {
   const query = encodeURIComponent(address);
