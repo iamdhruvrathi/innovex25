@@ -21,7 +21,7 @@
   <script>
     const kitchens = <%- JSON.stringify(kitchens || []) %>;
 
-    const map = L.map('map').setView([12.9716, 77.5946], 12); // Default to Bangalore
+    const map = L.map('map').setView([12.9716, 77.5946], 12); // Bangalore default
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
@@ -38,7 +38,7 @@
     }
 
     let bounds = L.latLngBounds();
-    
+
     kitchens.forEach(kitchen => {
       if (kitchen.lat && kitchen.lon) {
         addMarker(kitchen.lat, kitchen.lon, kitchen);
@@ -48,8 +48,33 @@
       }
     });
 
-    if (kitchens.length > 0) {
-      map.fitBounds(bounds);
+    // Show current user's location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLat = position.coords.latitude;
+          const userLon = position.coords.longitude;
+
+          L.marker([userLat, userLon], {
+            icon: L.icon({
+              iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+              iconSize: [30, 30]
+            })
+          }).addTo(map)
+            .bindPopup("<strong>You are here</strong>")
+            .openPopup();
+
+          bounds.extend([userLat, userLon]);
+          map.fitBounds(bounds);
+        },
+        (err) => {
+          console.error("Error getting location:", err.message);
+          if (kitchens.length > 0) map.fitBounds(bounds);
+        }
+      );
+    } else {
+      console.warn("Geolocation not supported.");
+      if (kitchens.length > 0) map.fitBounds(bounds);
     }
   </script>
 </body>
