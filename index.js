@@ -269,20 +269,73 @@ app.get("/admin", async (req, res) => {
 //     res.status(500).send("Server Error");
 //   }
 // });
+async function geocodeAddress(address) {
+  const query = encodeURIComponent(address);
+  const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (data && data.length > 0) {
+      return {
+        lat: parseFloat(data[0].lat),
+        lon: parseFloat(data[0].lon),
+      };
+    } else {
+      console.warn(`Geocoding failed for address: ${address}`);
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error geocoding address: ${address}`, error);
+    return null;
+  }
+}
+
+const GEOAPIFY_API_KEY = "c29f84cfcf71498eb908223d741e9396"; // Your Geoapify API Key
+
+// Function to geocode addresses using Geoapify
+async function geocodeAddress(address) {
+  const url = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(
+    address
+  )}&apiKey=${GEOAPIFY_API_KEY}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (data.features.length > 0) {
+      const location = data.features[0].geometry.coordinates;
+      return { lat: location[1], lon: location[0] }; // Geoapify returns [lon, lat]
+    } else {
+      console.warn(`Geoapify could not find location for: ${address}`);
+      return null;
+    }
+  } catch (error) {
+    console.error(`Geoapify geocoding error for ${address}:`, error);
+    return null;
+  }
+}
+
+// Fetch kitchens from Firebase and geocode addresses
 app.get("/map", async (req, res) => {
   try {
     const kitchensSnapshot = await db.collection("kitchens").get();
-    const kitchens = kitchensSnapshot.docs.map(doc => ({
+    let kitchens = kitchensSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    // Console each kitchen's address
-    kitchens.forEach(kitchen => {
-      console.log(`Kitchen: ${kitchen.name || "Unnamed"}, Address: ${kitchen.address}`);
-    });
+    // Fetch lat/lon for each kitchen
+    for (let kitchen of kitchens) {
+      if (!kitchen.lat || !kitchen.lon) {
+        const coords = await geocodeAddress(kitchen.address);
+        if (coords) {
+          kitchen.lat = coords.lat;
+          kitchen.lon = coords.lon;
+        }
+      }
+    }
 
-    res.render("map", { kitchens }); // Renders views/map.ejs
+    res.render("map", { kitchens }); // Render map.ejs with updated locations
   } catch (error) {
     console.error("Error fetching kitchens:", error);
     res.status(500).send("Server Error");
