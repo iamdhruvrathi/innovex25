@@ -99,12 +99,12 @@ Our platform is built using the following technologies:
 - average waste
 
 2. Seekers
-   - institution type
-   - address
-   - contact
-   - daily need
-   - frequency needed
-   - recieved (auto increment)
+- institution type
+- address
+- contact
+- daily need
+- frequency needed
+- recieved (auto increment)
   
 3. Volunteers
 - name
