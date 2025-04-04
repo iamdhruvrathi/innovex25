@@ -85,7 +85,7 @@ app.post("/kitchen", async (req, res) => {
 
     console.log("kitchenData:", kitchenData);
 
-    // Create kitchen object (if using class):
+    // Create kitchen object (if using class)
     const kitchen = new Kitchen(
       kitchenData.name,
       kitchenData.address,
@@ -98,14 +98,14 @@ app.post("/kitchen", async (req, res) => {
 
     const id = await Kitchen.create(kitchen);
 
-    // 🧠 Check if it's AJAX (fetch)
+    // If it's an AJAX request, return JSON response
     if (req.headers["content-type"] === "application/json") {
-      res
+      return res
         .status(200)
         .json({ message: "Kitchen registered successfully", kitchenId: id });
     }
 
-    // Background email sending ⏳
+    // Background email sending
     const seekersSnapshot = await db.collection("seekers").get();
     const subject = "🚨 New Kitchen Available!";
     const message = `Hey! A new kitchen "${kitchenData.name}" has just been registered at ${kitchenData.address}. Check it out!`;
@@ -120,11 +120,15 @@ app.post("/kitchen", async (req, res) => {
           );
       }
     });
+
+    // Redirect to /thanks after successful kitchen registration
+    res.redirect("/thanks");
   } catch (error) {
     console.error("🔥 Error adding kitchen:", error);
     res.status(500).json({ error: "Failed to register kitchen" });
   }
 });
+
 
 app.get("/volunteer", (req, res) => {
   res.render("volunteer.ejs");
