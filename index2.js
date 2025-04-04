@@ -4,12 +4,11 @@ const { db } = require("./config/firebase");
 const sendEmail = require("./config/email"); // import your reusable email sender
 
 
-// GET /deliveries - Show delivery tasks
 router.get("/deliveries", async (req, res) => {
   try {
     // Get kitchens and seekers
-    const kitchensSnapshot = await db.collection("kitchens").limit(2).get();
-    const seekersSnapshot = await db.collection("seekers").limit(2).get();
+    const kitchensSnapshot = await db.collection("kitchens").limit(4).get();
+    const seekersSnapshot = await db.collection("seekers").limit(4).get();
 
     const kitchens = kitchensSnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -21,7 +20,6 @@ router.get("/deliveries", async (req, res) => {
       ...doc.data(),
     }));
 
-    // Pair 2 kitchens with 2 seekers
     const deliveries = kitchens.map((kitchen, idx) => ({
       kitchen,
       seeker: seekers[idx] || null,
@@ -37,7 +35,6 @@ router.get("/deliveries", async (req, res) => {
 
 
 
-// POST /deliveries/accept - Accept a delivery
 router.post("/deliveries/accept", async (req, res) => {
     const { email, kitchenId, seekerId } = req.body;
   
@@ -46,7 +43,6 @@ router.post("/deliveries/accept", async (req, res) => {
     }
   
     try {
-      // Check if the email exists in the "deliverers" collection
       const delivererSnapshot = await db.collection("delivers").where("email", "==", email).get();
   
       if (delivererSnapshot.empty) {
@@ -60,8 +56,8 @@ router.post("/deliveries/accept", async (req, res) => {
     }
   });
 
-// Show the notify page with a button
-router.get("/notify", (req, res) => {
+
+  router.get("/notify", (req, res) => {
   res.send(`
     <html>
       <head>
@@ -92,7 +88,7 @@ router.get("/notify", (req, res) => {
   `);
 });
 
-// Handle the POST request to send emails
+
 router.post("/notify", async (req, res) => {
   try {
     const snapshot = await db.collection("delivers").get();
